@@ -1164,12 +1164,13 @@ body {
     }
     
     .header-content {
-        flex-direction: row;
-        justify-content: center;
-        padding: 16px;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 16px;
         height: auto;
         min-height: 50px;
         max-width: 100%;
+        gap: 12px;
     }
     
     .header-left .logo {
@@ -1182,10 +1183,48 @@ body {
         height: 20px;
     }
     
-    /* Hide other header elements on mobile */
-    .header-center,
+    /* Keep header center but hide header right on mobile */
     .header-right {
         display: none;
+    }
+    
+    .header-center {
+        order: 2;
+        width: 100%;
+    }
+    
+    /* Simplify header navigation for mobile */
+    .header-center .tab-navigation {
+        position: static;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 4px;
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .header-center .tab-navigation::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .header-center .tab-btn {
+        flex-shrink: 0;
+        flex-direction: row;
+        padding: 8px 12px;
+        min-height: auto;
+        max-width: none;
+        font-size: 0.8rem;
+        gap: 6px;
+        border-radius: 8px;
+    }
+    
+    .header-center .tab-btn i {
+        width: 16px;
+        height: 16px;
     }
     
     .header-left {
