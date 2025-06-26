@@ -62,14 +62,58 @@ class Agenda {
                     .map(a => ({ ...a, _barber: this.state.currentBarber }));
             }
             
+            this.renderTodaySchedule();
             this.renderCalendar();
         } catch (error) {
             console.error('Error in loadAppointments:', error);
             this.state.appointments = [];
+            this.renderTodaySchedule();
             this.renderCalendar();
         } finally {
             Utils.hideLoading('calendar');
         }
+    }
+
+    renderTodaySchedule() {
+        const today = Utils.formatDate(new Date(), 'YYYY-MM-DD');
+        const todayDateEl = document.getElementById('today-date');
+        const todayHoursEl = document.getElementById('today-hours');
+        
+        if (!todayDateEl || !todayHoursEl) return;
+        
+        // Set today's date
+        todayDateEl.textContent = Utils.formatDate(new Date(), 'DD/MM/YYYY');
+        
+        // Generate hourly slots from 8:00 to 18:00
+        const hours = [];
+        for (let hour = 8; hour <= 18; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                hours.push(timeStr);
+            }
+        }
+        
+        // Get today's appointments
+        const todayAppointments = this.state.appointments.filter(app => app.data === today);
+        
+        // Render hourly slots
+        todayHoursEl.innerHTML = hours.map(hour => {
+            const appointment = todayAppointments.find(app => 
+                app.horario && app.horario.substring(0, 5) === hour
+            );
+            
+            let className = 'hour-slot';
+            let content = hour;
+            
+            if (appointment) {
+                className += ' occupied';
+                content = `${hour}<br><small>${appointment.nome}</small>`;
+            } else {
+                className += ' available';
+            }
+            
+            return `<div class="${className}">${content}</div>`;
+        }).join('');
     }
 
     // Removed fetchAppointments - using demo data directly in loadAppointments
