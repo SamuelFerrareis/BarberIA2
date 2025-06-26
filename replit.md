@@ -121,6 +121,8 @@ avisos (id, conteudo, ativo, created_at, updated_at)
 - June 26, 2025. Implemented Supabase authentication and database connectivity
 - June 26, 2025. Added comprehensive theme system with dark mode default
 - June 26, 2025. Created mobile-first responsive design with accessibility features
+- June 26, 2025. Added custom schedule functionality for barbers (individual day/time settings)
+- June 26, 2025. Implemented comprehensive mobile UX/UI improvements following best practices
 
 ## Integration Notes
 
@@ -169,9 +171,19 @@ Preferred communication style: Simple, everyday language.
 ### Accessibility Features
 - **Font Scaling**: Adjustable text size (14px - 20px range)
 - **Theme System**: Dark mode (default), light mode, and high contrast options
-- **Mobile Optimization**: Touch-friendly interface with large tap targets
+- **Mobile Optimization**: Touch-friendly interface with large tap targets (min 44px)
 - **Keyboard Navigation**: Full keyboard accessibility support
 - **Screen Reader**: ARIA labels and semantic HTML structure
+
+### Mobile UX/UI Improvements (June 26, 2025)
+- **Mobile-First Design**: Responsive breakpoints (768px, 480px, 360px)
+- **Touch Optimization**: All touch targets minimum 44px for better usability
+- **Bottom Sheet Modals**: Native mobile modal experience with slide-up animation
+- **Horizontal Scroll Navigation**: Swipeable tab navigation for mobile
+- **Stacked Layout**: Single-column layout on mobile for better readability
+- **Form Optimization**: Large input fields, proper keyboard types, no zoom on iOS
+- **Visual Hierarchy**: Clear spacing, larger fonts, improved contrast on mobile
+- **Progressive Enhancement**: Desktop features adapt gracefully to mobile constraints
 
 ### Browser Compatibility
 - Modern browsers with ES6 support

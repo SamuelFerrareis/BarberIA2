@@ -1121,47 +1121,611 @@ body {
     font-weight: 500;
 }
 
-/* Responsive adjustments for schedule selector */
-@media (max-width: 768px) {
-    .schedule-selector {
-        padding: 12px;
-        gap: 10px;
+/* Mobile-First Responsive Design - seguindo boas práticas de UX/UI */
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+    .container {
+        padding: 16px;
     }
     
-    .day-schedule {
-        padding: 10px;
+    .main-content {
+        padding: 16px;
     }
     
-    .time-inputs {
-        gap: 8px;
-        padding: 6px 10px;
-    }
-    
-    .time-inputs input[type="time"] {
-        font-size: 0.85rem;
-        padding: 4px 6px;
-    }
-    
-    .schedule-display {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 6px;
-    }
-    
-    .day-schedule-item {
-        padding: 6px;
-    }
-    
-    .day-name {
-        font-size: 0.8rem;
-    }
-    
-    .day-hours {
-        font-size: 0.7rem;
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
 }
 
-@media (max-width: 320px) {
+/* Mobile adjustments - Primary breakpoint */
+@media (max-width: 768px) {
+    /* Layout improvements */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px;
+    }
+    
+    .main-content {
+        padding: 12px;
+        margin-left: 0;
+    }
+    
+    .container {
+        padding: 12px;
+    }
+    
+    /* Navigation improvements */
+    .nav-menu {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+        padding: 8px 0;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .nav-menu::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .nav-item {
+        flex-shrink: 0;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        min-width: auto;
+        white-space: nowrap;
+    }
+    
+    /* Form improvements for mobile */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .input-group {
+        margin-bottom: 16px;
+    }
+    
+    .input-group label {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        display: block;
+    }
+    
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+        padding: 14px 12px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Button improvements */
+    .primary-btn,
+    .secondary-btn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+        min-height: 48px; /* Touch target size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .form-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+    }
+    
+    .form-actions .primary-btn {
+        order: -1; /* Primary button first on mobile */
+    }
+    
+    /* Schedule selector mobile optimization */
+    .schedule-selector {
+        padding: 16px;
+        gap: 12px;
+        border-radius: 12px;
+    }
+    
+    .day-schedule {
+        padding: 16px;
+        border-radius: 12px;
+        background: var(--background-primary);
+        border: 2px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+    
+    .day-schedule:focus-within {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+    }
+    
+    .day-checkbox {
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .day-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        transform: scale(1.2);
+    }
+    
+    .day-label {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .time-inputs {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        background: var(--secondary-bg);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+    }
+    
+    .time-inputs input[type="time"] {
+        padding: 12px 16px;
+        font-size: 16px; /* Prevents zoom */
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        background: var(--background-primary);
+        min-height: 48px;
+        width: 100%;
+    }
+    
+    .time-inputs input[type="time"]:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+    }
+    
+    .time-separator {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-align: center;
+        padding: 8px 0;
+    }
+    
+    /* Schedule display mobile optimization */
+    .schedule-display {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .day-schedule-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        background: var(--background-primary);
+    }
+    
+    .day-schedule-item.active {
+        background: var(--success-bg);
+        border-color: var(--success-border);
+    }
+    
+    .day-schedule-item.inactive {
+        opacity: 0.6;
+        background: var(--secondary-bg);
+    }
+    
+    .day-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+    
+    .day-hours {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+    
+    .day-schedule-item.active .day-hours {
+        color: var(--success-text);
+        font-weight: 600;
+    }
+    
+    /* Modal improvements for mobile */
+    .modal {
+        padding: 16px;
+    }
+    
+    .modal-content {
+        max-width: 100%;
+        width: 100%;
+        max-height: 90vh;
+        margin: 0;
+        border-radius: 16px 16px 0 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        transform: none;
+        animation: slideUp 0.3s ease-out;
+    }
+    
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+    
+    .modal-header {
+        position: sticky;
+        top: 0;
+        background: var(--background-primary);
+        z-index: 10;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color);
+        margin: -20px -20px 16px -20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.25rem;
+        margin: 0;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+    }
+    
+    .close-btn:hover {
+        background: var(--secondary-bg);
+        color: var(--text-primary);
+    }
+    
+    .close-btn i {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .modal-body {
+        max-height: calc(90vh - 120px);
+        overflow-y: auto;
+        padding-bottom: 24px;
+    }
+    
+    /* Floating Action Button for mobile */
+    .fab {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--accent-primary);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
+    }
+    
+    .fab:active {
+        transform: scale(0.95);
+    }
+}
+
+/* Small mobile devices optimization */
+@media (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+    
+    .main-content {
+        padding: 8px;
+    }
+    
+    /* Header mobile optimization */
+    .header {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .header-left {
+        justify-content: center;
+    }
+    
+    .header-right {
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .header-right .secondary-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        min-height: 40px;
+    }
+    
+    /* Sidebar mobile optimization */
+    .sidebar {
+        padding: 12px;
+    }
+    
+    .nav-menu {
+        gap: 4px;
+        padding: 4px 0;
+    }
+    
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+    
+    /* Card improvements */
+    .card {
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .card h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    
+    /* Dashboard cards mobile */
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .dashboard-card {
+        padding: 16px;
+        text-align: center;
+    }
+    
+    .dashboard-card h3 {
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-card .card-value {
+        font-size: 1.5rem;
+    }
+    
+    /* Barber cards mobile */
+    .barber-card {
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .barber-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    .barber-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .barber-details {
+        margin-top: 16px;
+    }
+    
+    .detail-section {
+        margin-bottom: 16px;
+        padding: 12px;
+        background: var(--secondary-bg);
+        border-radius: 8px;
+    }
+    
+    .detail-section h4 {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .barber-actions {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 16px;
+    }
+    
+    .barber-actions .secondary-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+    }
+    
+    /* Agenda mobile improvements */
+    .controls-container {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .barber-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+    
+    .barber-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        min-height: 44px;
+    }
+    
+    .month-navigation {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+    
+    .month-nav {
+        padding: 10px 16px;
+        min-height: 44px;
+        font-size: 0.9rem;
+    }
+    
+    .current-month {
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-align: center;
+        flex: 1;
+    }
+    
+    .new-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.95rem;
+        min-height: 48px;
+        margin-top: 8px;
+    }
+    
+    /* Calendar mobile optimization */
+    .calendar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-top: 16px;
+    }
+    
+    .day-header {
+        display: none;
+    }
+    
+    .day-cell {
+        min-height: 100px;
+        padding: 8px;
+        border-radius: 8px;
+        position: relative;
+    }
+    
+    .day-number {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    
+    .lista-reservas {
+        max-height: 60px;
+        gap: 4px;
+    }
+    
+    .lista-reservas-item {
+        padding: 4px 6px;
+        font-size: 0.7rem;
+        border-radius: 4px;
+    }
+    
+    /* Form mobile optimization */
+    .form-grid {
+        gap: 8px;
+    }
+    
+    .input-group {
+        margin-bottom: 12px;
+    }
+    
+    .input-group label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    
+    /* Toast mobile optimization */
+    .toast {
+        bottom: 20px;
+        left: 16px;
+        right: 16px;
+        width: auto;
+        max-width: none;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .container {
+        padding: 4px;
+    }
+    
+    .main-content {
+        padding: 4px;
+    }
+    
     .calendar {
         grid-template-columns: 1fr;
+    }
+    
+    .day-cell {
+        min-height: 80px;
+        padding: 6px;
+    }
+    
+    .barber-buttons {
+        flex-direction: column;
+    }
+    
+    .barber-btn {
+        width: 100%;
+    }
+    
+    .nav-item {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .modal-content {
+        border-radius: 8px 8px 0 0;
     }
 }
