@@ -142,7 +142,7 @@ class Avisos {
                 </div>
                 
                 ${this.currentNotice.titulo ? `
-                    <h4 class="notice-title">${this.currentNotice.titulo}</h4>
+                    <h4 class="notice-title">${this.escapeHtml(this.currentNotice.titulo)}</h4>
                 ` : ''}
                 
                 <div class="notice-message">
@@ -150,7 +150,7 @@ class Avisos {
                 </div>
                 
                 <div class="notice-meta">
-                    <small>Por: ${this.currentNotice.created_by || 'Sistema'}</small>
+                    <small>Por: ${this.escapeHtml(this.currentNotice.created_by || 'Sistema')}</small>
                 </div>
             </div>
         `;
@@ -188,7 +188,7 @@ class Avisos {
                 </div>
                 
                 ${notice.titulo ? `
-                    <h5 class="history-title">${notice.titulo}</h5>
+                    <h5 class="history-title">${this.escapeHtml(notice.titulo)}</h5>
                 ` : ''}
                 
                 <div class="history-message">
@@ -213,11 +213,24 @@ class Avisos {
         feather.replace();
     }
 
+    escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     formatNoticeMessage(message, truncate = false) {
         if (!message) return '';
         
+        // Escape HTML characters to prevent XSS
+        let formatted = this.escapeHtml(message);
+        
         // Convert line breaks to HTML
-        let formatted = message.replace(/\n/g, '<br>');
+        formatted = formatted.replace(/\n/g, '<br>');
         
         // Truncate for history if needed
         if (truncate && formatted.length > 150) {
