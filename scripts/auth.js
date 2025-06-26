@@ -50,29 +50,39 @@ class Auth {
 
     async login(email, password) {
         try {
-            const { data, error } = await this.supabase.auth.signInWithPassword({
-                email: email,
-                password: password
+            // Sistema de autenticação simples para demonstração
+            const validCredentials = [
+                { email: 'admin@barbearia.com', password: 'admin123', name: 'Administrador' },
+                { email: 'barbeiro@barbearia.com', password: 'barbeiro123', name: 'Barbeiro' }
+            ];
+
+            const user = validCredentials.find(cred => 
+                cred.email === email && cred.password === password
+            );
+
+            if (!user) {
+                throw new Error('Email ou senha incorretos');
+            }
+
+            // Criar sessão local
+            this.currentUser = {
+                id: Date.now(),
+                email: user.email,
+                name: user.name,
+                role: user.email.includes('admin') ? 'admin' : 'barbeiro'
+            };
+
+            Utils.setLocalStorage('currentUser', {
+                ...this.currentUser,
+                lastLogin: new Date().toISOString(),
+                expires: new Date().getTime() + (24 * 60 * 60 * 1000) // 24 horas
             });
 
-            if (error) {
-                throw error;
-            }
-
-            if (data.user) {
-                this.currentUser = data.user;
-                Utils.setLocalStorage('currentUser', {
-                    id: data.user.id,
-                    email: data.user.email,
-                    lastLogin: new Date().toISOString()
-                });
-                
-                Utils.showToast('Login realizado com sucesso!', 'success');
-                this.showMainApp();
-            }
+            Utils.showToast(`Bem-vindo, ${user.name}!`, 'success');
+            this.showMainApp();
         } catch (error) {
             console.error('Login error:', error);
-            this.showLoginError(this.getErrorMessage(error));
+            this.showLoginError(error.message);
         }
     }
 
