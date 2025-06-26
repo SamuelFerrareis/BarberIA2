@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão - Barbearia</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Carregando sistema...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen hidden">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo">
+                    <i data-feather="scissors"></i>
+                    <h1>Barbearia</h1>
+                </div>
+                <p>Sistema de Gestão</p>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <span>Entrar</span>
+                    <i data-feather="arrow-right"></i>
+                </button>
+            </form>
+            
+            <div id="login-error" class="error-message hidden"></div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="main-app hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">
+                        <i data-feather="scissors"></i>
+                        <span>Barbearia</span>
+                    </div>
+                </div>
+                
+                <div class="header-center">
+                    <nav class="tab-navigation">
+                        <button class="tab-btn active" data-tab="dashboard">
+                            <i data-feather="home"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button class="tab-btn" data-tab="agenda">
+                            <i data-feather="calendar"></i>
+                            <span>Agenda</span>
+                        </button>
+                        <button class="tab-btn" data-tab="barbeiros">
+                            <i data-feather="users"></i>
+                            <span>Barbeiros</span>
+                        </button>
+                        <button class="tab-btn" data-tab="relatorios">
+                            <i data-feather="bar-chart-2"></i>
+                            <span>Relatórios</span>
+                        </button>
+                        <button class="tab-btn" data-tab="avisos">
+                            <i data-feather="bell"></i>
+                            <span>Avisos</span>
+                        </button>
+                    </nav>
+                </div>
+                
+                <div class="header-right">
+                    <div class="accessibility-controls">
+                        <button id="font-size-btn" class="control-btn" title="Tamanho da fonte">
+                            <i data-feather="type"></i>
+                        </button>
+                        <button id="theme-toggle-btn" class="control-btn" title="Alternar tema">
+                            <i data-feather="moon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="user-menu">
+                        <button id="user-menu-btn" class="user-btn">
+                            <i data-feather="user"></i>
+                        </button>
+                        <div id="user-dropdown" class="user-dropdown hidden">
+                            <button id="logout-btn">
+                                <i data-feather="log-out"></i>
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Dashboard Tab -->
+            <section id="dashboard-tab" class="tab-content active">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h2>Dashboard</h2>
+                        <div class="date-display">
+                            <span id="current-date"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i data-feather="calendar"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Hoje</h3>
+                                <span id="appointments-today" class="metric-value">0</span>
+                                <small>agendamentos</small>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i data-feather="trending-up"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Esta Semana</h3>
+                                <span id="appointments-week" class="metric-value">0</span>
+                                <small>agendamentos</small>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i data-feather="dollar-sign"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Faturamento</h3>
+                                <span id="revenue-month" class="metric-value">R$ 0</span>
+                                <small>este mês</small>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i data-feather="users"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h3>Clientes</h3>
+                                <span id="clients-month" class="metric-value">0</span>
+                                <small>este mês</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>Próximos Agendamentos</h3>
+                            <div id="next-appointments" class="appointments-list">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <h3>Status dos Barbeiros</h3>
+                            <div id="barbers-status" class="barbers-status">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Agenda Tab -->
+            <section id="agenda-tab" class="tab-content">
+                <div class="agenda-container">
+                    <div class="agenda-header">
+                        <h2>Agenda</h2>
+                        <div class="controls-container">
+                            <div class="barber-controls">
+                                <button id="btn-todos" class="barber-btn active" onclick="setBarbeiro('todos')">Todos</button>
+                                <button id="btn-renne" class="barber-btn" onclick="setBarbeiro('renne')">Renne</button>
+                                <button id="btn-lele" class="barber-btn" onclick="setBarbeiro('lele')">Lele</button>
+                            </div>
+                            <div class="date-controls">
+                                <button class="month-nav" onclick="changeMonth(-1)">‹</button>
+                                <span id="current-month">Janeiro 2025</span>
+                                <button class="month-nav" onclick="changeMonth(1)">›</button>
+                            </div>
+                            <button class="new-btn" onclick="openNewModal()">+ Novo</button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-container">
+                        <div id="calendar" class="calendar">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Barbeiros Tab -->
+            <section id="barbeiros-tab" class="tab-content">
+                <div class="barbeiros-container">
+                    <div class="barbeiros-header">
+                        <h2>Gestão de Barbeiros</h2>
+                        <button id="add-barber-btn" class="primary-btn">
+                            <i data-feather="plus"></i>
+                            Adicionar Barbeiro
+                        </button>
+                    </div>
+                    
+                    <div id="barbeiros-list" class="barbeiros-list">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Relatórios Tab -->
+            <section id="relatorios-tab" class="tab-content">
+                <div class="relatorios-container">
+                    <div class="relatorios-header">
+                        <h2>Relatórios</h2>
+                        <div class="report-filters">
+                            <select id="report-period">
+                                <option value="month">Este Mês</option>
+                                <option value="quarter">Último Trimestre</option>
+                                <option value="year">Este Ano</option>
+                            </select>
+                            <select id="report-barber">
+                                <option value="all">Todos os Barbeiros</option>
+                                <option value="renne">Renne</option>
+                                <option value="lele">Lele</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Atendimentos por Barbeiro</h3>
+                            <div class="chart-container">
+                                <canvas id="appointments-chart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card">
+                            <h3>Faturamento Mensal</h3>
+                            <div class="chart-container">
+                                <canvas id="revenue-chart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card">
+                            <h3>Status dos Atendimentos</h3>
+                            <div class="chart-container">
+                                <canvas id="status-chart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="report-card">
+                            <h3>Horários Mais Movimentados</h3>
+                            <div class="chart-container">
+                                <canvas id="hours-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Avisos Tab -->
+            <section id="avisos-tab" class="tab-content">
+                <div class="avisos-container">
+                    <div class="avisos-header">
+                        <h2>Avisos ao Bot</h2>
+                        <p>Configure mensagens automáticas para o sistema de agendamento</p>
+                    </div>
+                    
+                    <div class="avisos-content">
+                        <div class="aviso-card">
+                            <h3>Aviso Atual</h3>
+                            <div id="current-notice" class="current-notice">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="aviso-card">
+                            <h3>Atualizar Aviso</h3>
+                            <form id="notice-form" class="notice-form">
+                                <div class="input-group">
+                                    <label for="notice-text">Mensagem</label>
+                                    <textarea id="notice-text" rows="4" placeholder="Digite o aviso para ser exibido no bot..."></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="primary-btn">
+                                        <i data-feather="send"></i>
+                                        Atualizar Aviso
+                                    </button>
+                                    <button type="button" id="clear-notice-btn" class="secondary-btn">
+                                        <i data-feather="trash-2"></i>
+                                        Limpar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="aviso-card">
+                            <h3>Histórico de Avisos</h3>
+                            <div id="notices-history" class="notices-history">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal" class="modal">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div id="modal-content" class="modal-content">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Font Size Modal -->
+    <div id="font-size-modal" class="modal">
+        <div class="modal-backdrop" onclick="closeFontSizeModal()"></div>
+        <div class="modal-content">
+            <h3>Tamanho da Fonte</h3>
+            <div class="font-size-controls">
+                <button id="font-decrease" class="font-btn">A-</button>
+                <span id="font-current">100%</span>
+                <button id="font-increase" class="font-btn">A+</button>
+            </div>
+            <button onclick="closeFontSizeModal()" class="secondary-btn">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/agenda.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    <script src="scripts/barbeiros.js"></script>
+    <script src="scripts/relatorios.js"></script>
+    <script src="scripts/avisos.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
