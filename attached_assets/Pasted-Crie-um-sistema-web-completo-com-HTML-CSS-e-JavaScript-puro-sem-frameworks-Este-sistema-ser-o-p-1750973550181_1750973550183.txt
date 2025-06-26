@@ -1,0 +1,66 @@
+Crie um sistema web completo com HTML, CSS e JavaScript puro (sem frameworks). Este sistema será o painel administrativo de uma barbearia, usado em conjunto com um chatbot de agendamento, e se conecta ao Supabase (já configurado e com tabelas prontas).
+
+🧩 Tecnologias:
+- HTML, CSS, JS (sem frameworks)
+- Supabase (Auth + banco de dados já prontos)
+- Interface mobile-first, acessível e leve
+- Armazenamento local (localStorage) para manter sessão e preferências
+
+---
+
+🎯 Funcionalidades obrigatórias:
+
+1. **Login com Supabase Auth**
+   - Tela de login com validação.
+   - Após login, salva o usuário localmente para não precisar logar sempre (usando localStorage).
+   - Redirecionamento para o dashboard.
+
+2. **Dashboard com Agenda**
+   - Exibição de calendário mensal interativo.
+   - Mostrar agendamentos por dia (cards, lista ou balões clicáveis).
+   - Filtro por barbeiro e por mês.
+   - Ao clicar num dia, exibir os detalhes dos agendamentos.
+   - Layout adaptado ao mobile (scroll horizontal para dias, visão vertical para detalhes).
+
+3. **Relatórios**
+   - Exibir número de atendimentos por barbeiro e por mês.
+   - Visualização gráfica (barras, pizza ou linhas).
+   - Cards com totais e status visual.
+
+4. **Gestão de Barbeiros**
+   - Listar barbeiros com nome, status, ícone e horários.
+   - Para cada barbeiro:
+     - Selecionar dias disponíveis (segunda a domingo, com toggle ou checkboxes).
+     - Definir horário de trabalho por dia (ex: 08:00 às 18:00).
+   - Dados sincronizados com Supabase.
+
+5. **Avisos ao Bot**
+   - Campo de texto simples para inserir avisos manuais.
+   - Botão "Atualizar Aviso" que salva o conteúdo no Supabase.
+   - Interface com feedback de sucesso ou erro.
+
+---
+
+🎨 Preferências e acessibilidade (⚠️ importantes):
+
+- O sistema **deve ser mobile-first**. O uso será majoritariamente em celulares.
+- Adicionar opção para **aumentar e diminuir o tamanho das letras**, com persistência (usar localStorage).
+- Adicionar botão para **alternar o plano de fundo** (ex: dark, claro, colorido) com persistência também.
+- Layout responsivo e adaptável com acessibilidade: bom contraste, toques grandes e legibilidade.
+- Usar ícones de barbearia (tesoura, navalha, cadeira, máquina).
+- Ícones SVG ou importados de bibliotecas leves.
+
+---
+
+🔗 Referências visuais para estilo e experiência:
+- https://staratlas.com/ (futurista, elegante)
+- https://www.squadeasy.com/en/ (moderno e interativo)
+- Dashboard escuro com gráficos (como mostrado nesta imagem: f000a83f-c914-4cb8-913d-be73bc719a2a.png)
+
+---
+
+📦 Observações adicionais:
+- As tabelas do Supabase já existem: `barbeiros`, `agendamentos`, `avisos`, etc.
+- Não crie banco ou tabelas, apenas consuma os dados existentes via API.
+- Mantenha o código modular e separado (index.html, style.css, main.js).
+- Comece estruturando a navegação com abas/telas (Dashboard, Barbeiros, Relatórios, Avisos).
