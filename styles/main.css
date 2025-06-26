@@ -851,6 +851,57 @@ body {
     box-shadow: var(--shadow-md);
 }
 
+/* Today Schedule Styles */
+.today-schedule {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.today-schedule h3 {
+    margin: 0 0 15px 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.today-hours {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+.hour-slot {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.hour-slot.occupied {
+    background: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+}
+
+.hour-slot.available {
+    background: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+}
+
+.hour-slot:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
 .calendar-container {
     overflow-x: hidden;
     background: var(--card-bg);

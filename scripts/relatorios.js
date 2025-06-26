@@ -8,7 +8,7 @@ class Relatorios {
     }
 
     init() {
-        this.supabase = window.Auth.getSupabaseClient();
+        // Use demo data only to prevent errors
         this.setupEventListeners();
         this.loadReportsData();
     }
