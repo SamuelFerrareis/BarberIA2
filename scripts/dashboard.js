@@ -45,6 +45,7 @@ class Dashboard {
             this.updateMetrics();
             this.updateNextAppointments();
             this.updateBarbersStatus();
+            this.generateMiniCharts();
         } catch (error) {
             Utils.handleError(error, 'loadDashboardData');
         }
@@ -413,6 +414,99 @@ class Dashboard {
         const sunday = new Date(today);
         sunday.setDate(today.getDate() + sundayOffset);
         return Utils.formatDate(sunday, 'YYYY-MM-DD');
+    }
+
+    generateMiniCharts() {
+        this.generateWeekChart();
+        this.generateBarberPerformanceChart();
+    }
+
+    generateWeekChart() {
+        const ctx = document.getElementById('week-chart');
+        if (!ctx) return;
+
+        const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        const today = new Date();
+        const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+        
+        const weekData = weekDays.map((day, index) => {
+            const date = new Date(weekStart);
+            date.setDate(weekStart.getDate() + index);
+            const dateStr = Utils.formatDate(date, 'YYYY-MM-DD');
+            
+            return this.appointments.filter(app => app.data === dateStr).length;
+        });
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: weekDays,
+                datasets: [{
+                    label: 'Agendamentos',
+                    data: weekData,
+                    borderColor: 'var(--chart-primary)',
+                    backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'var(--chart-primary)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        grid: { display: false },
+                        ticks: { color: 'var(--text-secondary)', font: { size: 10 } }
+                    },
+                    y: {
+                        display: false,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    generateBarberPerformanceChart() {
+        const ctx = document.getElementById('barber-performance-chart');
+        if (!ctx) return;
+
+        const renneApps = this.appointments.filter(app => app._barber === 'renne');
+        const leleApps = this.appointments.filter(app => app._barber === 'lele');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Renne', 'Lele'],
+                datasets: [{
+                    data: [renneApps.length, leleApps.length],
+                    backgroundColor: ['var(--chart-primary)', 'var(--chart-secondary)'],
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: 'var(--text-secondary)',
+                            font: { size: 10 },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    }
+                }
+            }
+        });
     }
 
     destroy() {

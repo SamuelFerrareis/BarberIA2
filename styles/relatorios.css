@@ -108,6 +108,136 @@
     max-height: 300px;
 }
 
+/* Métricas do Dashboard - Estilo da imagem */
+.dashboard-container .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.dashboard-container .metric-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.dashboard-container .metric-card.highlight {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+    color: white;
+    border-color: transparent;
+}
+
+.dashboard-container .metric-card.highlight .metric-label,
+.dashboard-container .metric-card.highlight .metric-value {
+    color: white;
+}
+
+.dashboard-container .metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.dashboard-container .metric-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dashboard-container .metric-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.dashboard-container .metric-icon.revenue {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.dashboard-container .metric-icon.today {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.dashboard-container .metric-icon.month {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+}
+
+.dashboard-container .metric-icon.rate {
+    background: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+}
+
+.dashboard-container .metric-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: block;
+    line-height: 1;
+}
+
+.dashboard-container .metric-change {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.dashboard-container .metric-change.positive {
+    color: var(--success-text);
+    background: var(--success-bg);
+}
+
+.dashboard-container .metric-change.negative {
+    color: var(--error-text);
+    background: var(--error-bg);
+}
+
+/* Mini gráficos do dashboard */
+.dashboard-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.chart-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.chart-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+}
+
+.mini-chart {
+    height: 120px;
+    position: relative;
+}
+
 /* Métricas no topo */
 .metrics-grid {
     display: grid;
