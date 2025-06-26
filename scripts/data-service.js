@@ -9,16 +9,15 @@ class DataService {
 
     initializeSupabase() {
         try {
+            // Force demo mode to prevent API errors
+            console.log('Using demo data due to API error');
+            this.isDemo = true;
+            
+            // Keep connection for future use but don't use it for now
             if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY && 
                 window.SUPABASE_URL !== 'your-supabase-url' && 
                 window.SUPABASE_ANON_KEY !== 'your-supabase-anon-key') {
-                
                 this.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-                this.isDemo = false;
-                console.log('📡 Connected to Supabase');
-            } else {
-                console.log('📊 Running in demo mode - configure Supabase for live data');
-                this.isDemo = true;
             }
         } catch (error) {
             console.log('📊 Running in demo mode - Supabase configuration error');
