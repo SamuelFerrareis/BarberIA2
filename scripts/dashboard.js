@@ -30,10 +30,10 @@ class Dashboard {
 
     async loadDashboardData() {
         try {
-            // Load appointments from both barbers
+            // Use DataService for unified data access
             const [renneApps, leleApps] = await Promise.all([
-                this.fetchAppointments('renne'),
-                this.fetchAppointments('lele')
+                dataService.getAppointments('renne'),
+                dataService.getAppointments('lele')
             ]);
 
             // Combine and mark appointments with barber info

@@ -77,14 +77,8 @@ class Agenda {
 
     async fetchAppointments(barber) {
         try {
-            const { data, error } = await this.supabase
-                .from(`agendamentos_${barber}`)
-                .select('*')
-                .order('horainicio', { ascending: true });
-                
-            if (error) throw error;
-            
-            return (data || []).map(a => ({ ...a, id: a.agendamentoid }));
+            const appointments = await dataService.getAppointments(barber);
+            return appointments.map(a => ({ ...a, id: a.agendamentoid || a.id }));
         } catch (error) {
             console.error(`Error fetching appointments for ${barber}:`, error);
             return [];
