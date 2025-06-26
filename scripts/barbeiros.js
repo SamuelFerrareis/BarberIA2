@@ -133,9 +133,11 @@ class Barbeiros {
                     </div>
                     
                     <div class="detail-section">
-                        <h4><i data-feather="calendar"></i> Dias Disponíveis</h4>
-                        <div class="days-grid">
-                            ${this.renderDaysAvailable(barbeiro.dias_disponiveis)}
+                        <h4><i data-feather="calendar"></i> ${barbeiro.horarios_personalizados ? 'Horários Personalizados' : 'Dias Disponíveis'}</h4>
+                        <div class="schedule-display">
+                            ${barbeiro.horarios_personalizados ? 
+                                this.renderCustomScheduleDisplay(barbeiro.horarios_personalizados) : 
+                                this.renderDaysAvailable(barbeiro.dias_disponiveis)}
                         </div>
                     </div>
                     
@@ -341,6 +343,37 @@ class Barbeiros {
                     </div>
                 </div>
             `;
+        }).join('');
+    }
+
+    renderCustomScheduleDisplay(customSchedules) {
+        const days = [
+            { key: 'domingo', label: 'Dom' },
+            { key: 'segunda', label: 'Seg' },
+            { key: 'terca', label: 'Ter' },
+            { key: 'quarta', label: 'Qua' },
+            { key: 'quinta', label: 'Qui' },
+            { key: 'sexta', label: 'Sex' },
+            { key: 'sabado', label: 'Sáb' }
+        ];
+
+        return days.map(day => {
+            const schedule = customSchedules[day.key];
+            if (schedule && schedule.ativo) {
+                return `
+                    <div class="day-schedule-item active">
+                        <span class="day-name">${day.label}</span>
+                        <span class="day-hours">${schedule.inicio} - ${schedule.fim}</span>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="day-schedule-item inactive">
+                        <span class="day-name">${day.label}</span>
+                        <span class="day-hours">Indisponível</span>
+                    </div>
+                `;
+            }
         }).join('');
     }
 

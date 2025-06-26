@@ -1079,6 +1079,48 @@ body {
     font-weight: 500;
 }
 
+/* Schedule Display Styles */
+.schedule-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+.day-schedule-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.day-schedule-item.active {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: var(--success-border);
+}
+
+.day-schedule-item.inactive {
+    background: var(--secondary-bg);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+    opacity: 0.7;
+}
+
+.day-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.day-hours {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
 /* Responsive adjustments for schedule selector */
 @media (max-width: 768px) {
     .schedule-selector {
@@ -1098,6 +1140,23 @@ body {
     .time-inputs input[type="time"] {
         font-size: 0.85rem;
         padding: 4px 6px;
+    }
+    
+    .schedule-display {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 6px;
+    }
+    
+    .day-schedule-item {
+        padding: 6px;
+    }
+    
+    .day-name {
+        font-size: 0.8rem;
+    }
+    
+    .day-hours {
+        font-size: 0.7rem;
     }
 }
 
