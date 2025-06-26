@@ -18,6 +18,7 @@ class DataService {
                 console.log('📡 Connected to Supabase');
             } else {
                 console.log('📊 Running in demo mode - configure Supabase for live data');
+                this.isDemo = true;
             }
         } catch (error) {
             console.log('📊 Running in demo mode - Supabase configuration error');

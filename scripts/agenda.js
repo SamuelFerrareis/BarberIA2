@@ -48,28 +48,25 @@ class Agenda {
     }
 
     async loadAppointments() {
+        Utils.showLoading('calendar', 'Carregando agendamentos...');
+        
         try {
-            Utils.showLoading('calendar', 'Carregando agendamentos...');
-            
-            let apps = [];
+            // Direct demo data usage to prevent errors
             if (this.state.currentBarber === 'todos') {
-                const [r, l] = await Promise.all([
-                    this.fetchAppointments('renne'),
-                    this.fetchAppointments('lele')
-                ]);
-                r.forEach(a => a._barber = 'renne');
-                l.forEach(a => a._barber = 'lele');
-                apps = [...r, ...l];
+                this.state.appointments = [
+                    ...DemoData.getAppointments('renne').map(a => ({ ...a, _barber: 'renne' })),
+                    ...DemoData.getAppointments('lele').map(a => ({ ...a, _barber: 'lele' }))
+                ];
             } else {
-                apps = await this.fetchAppointments(this.state.currentBarber);
-                apps.forEach(a => a._barber = this.state.currentBarber);
+                this.state.appointments = DemoData.getAppointments(this.state.currentBarber)
+                    .map(a => ({ ...a, _barber: this.state.currentBarber }));
             }
             
-            this.state.appointments = apps;
             this.renderCalendar();
         } catch (error) {
-            Utils.handleError(error, 'loadAppointments');
-            this.renderCalendar(); // Render empty calendar
+            console.error('Error in loadAppointments:', error);
+            this.state.appointments = [];
+            this.renderCalendar();
         } finally {
             Utils.hideLoading('calendar');
         }
