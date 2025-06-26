@@ -868,38 +868,98 @@ body {
 }
 
 .today-hours {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.hour-slot {
-    background: var(--secondary-bg);
+.appointment-item {
+    background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px 8px;
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
     transition: all 0.3s ease;
 }
 
-.hour-slot.occupied {
-    background: var(--accent-primary);
-    color: white;
-    border-color: var(--accent-primary);
-}
-
-.hour-slot.available {
-    background: var(--success-color);
-    color: white;
-    border-color: var(--success-color);
-}
-
-.hour-slot:hover {
+.appointment-item:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
+}
+
+.appointment-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    min-width: 60px;
+    text-align: center;
+}
+
+.appointment-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.appointment-client {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.appointment-service {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.appointment-barber {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: capitalize;
+}
+
+.appointment-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+}
+
+.no-appointments {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-style: italic;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    border: 1px dashed var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .appointment-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .appointment-time {
+        min-width: auto;
+        text-align: left;
+        font-size: 1.2rem;
+    }
+    
+    .appointment-details {
+        width: 100%;
+    }
+    
+    .appointment-status {
+        align-self: flex-end;
+    }
 }
 
 .calendar-container {

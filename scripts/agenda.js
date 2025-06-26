@@ -84,36 +84,38 @@ class Agenda {
         // Set today's date
         todayDateEl.textContent = Utils.formatDate(new Date(), 'DD/MM/YYYY');
         
-        // Generate hourly slots from 8:00 to 18:00
-        const hours = [];
-        for (let hour = 8; hour <= 18; hour++) {
-            for (let minute = 0; minute < 60; minute += 30) {
-                const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-                hours.push(timeStr);
-            }
+        // Get today's appointments and sort by time
+        const todayAppointments = this.state.appointments
+            .filter(app => app.data === today)
+            .sort((a, b) => {
+                const timeA = a.horario || '00:00';
+                const timeB = b.horario || '00:00';
+                return timeA.localeCompare(timeB);
+            });
+        
+        // Render appointments list
+        if (todayAppointments.length === 0) {
+            todayHoursEl.innerHTML = '<div class="no-appointments">Nenhum agendamento para hoje</div>';
+        } else {
+            todayHoursEl.innerHTML = todayAppointments.map(appointment => {
+                const barberColor = Utils.getBarberColor(appointment._barber);
+                const statusColor = Utils.getStatusColor(appointment.status || 'agendado');
+                
+                return `
+                    <div class="appointment-item" style="border-left: 4px solid ${barberColor}">
+                        <div class="appointment-time">${appointment.horario || 'Sem horário'}</div>
+                        <div class="appointment-details">
+                            <div class="appointment-client">${appointment.nome}</div>
+                            <div class="appointment-service">${appointment.servico}</div>
+                            <div class="appointment-barber">${appointment._barber}</div>
+                        </div>
+                        <div class="appointment-status" style="background: ${statusColor}">
+                            ${appointment.status || 'Agendado'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
-        
-        // Get today's appointments
-        const todayAppointments = this.state.appointments.filter(app => app.data === today);
-        
-        // Render hourly slots
-        todayHoursEl.innerHTML = hours.map(hour => {
-            const appointment = todayAppointments.find(app => 
-                app.horario && app.horario.substring(0, 5) === hour
-            );
-            
-            let className = 'hour-slot';
-            let content = hour;
-            
-            if (appointment) {
-                className += ' occupied';
-                content = `${hour}<br><small>${appointment.nome}</small>`;
-            } else {
-                className += ' available';
-            }
-            
-            return `<div class="${className}">${content}</div>`;
-        }).join('');
     }
 
     // Removed fetchAppointments - using demo data directly in loadAppointments

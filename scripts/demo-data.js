@@ -9,7 +9,7 @@ class DemoData {
                 nome: 'João Silva',
                 telefone: '(11) 99999-1111',
                 servico: 'Corte + Barba',
-                data: '2025-06-27',
+                data: '2025-06-26',
                 horario: '09:00',
                 preco: 45.00,
                 status: 'confirmado',
@@ -20,16 +20,60 @@ class DemoData {
                 nome: 'Pedro Santos',
                 telefone: '(11) 99999-2222',
                 servico: 'Corte',
+                data: '2025-06-26',
+                horario: '13:10',
+                preco: 25.00,
+                status: 'agendado',
+                observacoes: ''
+            },
+            {
+                id: 3,
+                nome: 'Carlos Lima',
+                telefone: '(11) 99999-3333',
+                servico: 'Barba',
+                data: '2025-06-26',
+                horario: '15:45',
+                preco: 20.00,
+                status: 'confirmado',
+                observacoes: ''
+            },
+            {
+                id: 4,
+                nome: 'Roberto Oliveira',
+                telefone: '(11) 99999-4444',
+                servico: 'Corte + Barba',
                 data: '2025-06-27',
                 horario: '14:30',
-                preco: 25.00,
+                preco: 45.00,
                 status: 'agendado',
                 observacoes: ''
             }
         ],
         lele: [
             {
-                id: 3,
+                id: 5,
+                nome: 'Ana Costa',
+                telefone: '(11) 99999-5555',
+                servico: 'Corte Feminino',
+                data: '2025-06-26',
+                horario: '11:20',
+                preco: 35.00,
+                status: 'confirmado',
+                observacoes: 'Cliente VIP'
+            },
+            {
+                id: 6,
+                nome: 'Ricardo Mendes',
+                telefone: '(11) 99999-6666',
+                servico: 'Corte + Barba',
+                data: '2025-06-26',
+                horario: '16:15',
+                preco: 45.00,
+                status: 'agendado',
+                observacoes: ''
+            },
+            {
+                id: 7,
                 nome: 'Maria Oliveira',
                 telefone: '(11) 99999-3333',
                 servico: 'Corte Feminino',
