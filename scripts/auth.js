@@ -150,7 +150,7 @@ class Auth {
                 
                 // Show loading state
                 const submitBtn = loginForm.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
+                const originalText = submitBtn.textContent;
                 submitBtn.innerHTML = '<div class="loading-spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
                 submitBtn.disabled = true;
                 
@@ -158,7 +158,7 @@ class Auth {
                     await this.login(email, password);
                 } finally {
                     // Restore button state
-                    submitBtn.innerHTML = originalText;
+                    submitBtn.textContent = originalText;
                     submitBtn.disabled = false;
                 }
             });
