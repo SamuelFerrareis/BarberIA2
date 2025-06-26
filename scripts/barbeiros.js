@@ -108,16 +108,16 @@ class Barbeiros {
         const barbeirosHtml = this.barbeiros.map(barbeiro => `
             <div class="barber-card" data-barber-id="${barbeiro.id}">
                 <div class="barber-header">
-                    <div class="barber-avatar" style="background-color: ${barbeiro.cor_tema}20; border: 2px solid ${barbeiro.cor_tema}">
+                    <div class="barber-avatar" style="background-color: ${Utils.escapeHtml(barbeiro.cor_tema)}20; border: 2px solid ${Utils.escapeHtml(barbeiro.cor_tema)}">
                         ${barbeiro.foto_url ? 
-                            `<img src="${barbeiro.foto_url}" alt="${barbeiro.nome}">` : 
+                            `<img src="${Utils.escapeHtml(barbeiro.foto_url)}" alt="${Utils.escapeHtml(barbeiro.nome)}">` : 
                             `<i data-feather="user"></i>`
                         }
                     </div>
                     <div class="barber-info">
-                        <h3>${barbeiro.nome}</h3>
-                        <p class="barber-email">${barbeiro.email || ''}</p>
-                        <p class="barber-phone">${barbeiro.telefone || ''}</p>
+                        <h3>${Utils.escapeHtml(barbeiro.nome)}</h3>
+                        <p class="barber-email">${Utils.escapeHtml(barbeiro.email || '')}</p>
+                        <p class="barber-phone">${Utils.escapeHtml(barbeiro.telefone || '')}</p>
                     </div>
                     <div class="barber-status">
                         <span class="status-badge status-${barbeiro.status}">
@@ -145,7 +145,7 @@ class Barbeiros {
                         <h4><i data-feather="scissors"></i> Especialidades</h4>
                         <div class="specialties-list">
                             ${(barbeiro.especialidades || []).map(esp => 
-                                `<span class="specialty-tag">${esp}</span>`
+                                `<span class="specialty-tag">${Utils.escapeHtml(esp)}</span>`
                             ).join('')}
                         </div>
                     </div>

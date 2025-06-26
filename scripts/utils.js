@@ -350,6 +350,17 @@ class Utils {
         };
         return colors[status] || colors.agendado;
     }
+
+    // Security utilities
+    static escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 }
 
 // Export for use in other modules
