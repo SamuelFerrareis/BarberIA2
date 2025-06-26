@@ -1,0 +1,394 @@
+/* Agenda-specific styles integrating with the main theme system */
+
+/* Agenda Container */
+.agenda-container {
+    width: 100%;
+}
+
+.agenda-header {
+    margin-bottom: 24px;
+}
+
+.agenda-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+/* Controls Container - Updated for theme compatibility */
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin-bottom: 24px;
+}
+
+.barber-controls,
+.date-controls {
+    display: flex;
+    gap: 8px;
+}
+
+/* Button Styles - Updated for theme compatibility */
+.barber-btn,
+.month-nav,
+.new-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.barber-btn {
+    background: var(--secondary-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.barber-btn.active,
+.barber-btn:hover {
+    background: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.month-nav {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    font-size: 1.2rem;
+    min-width: 44px;
+    justify-content: center;
+}
+
+.month-nav:hover {
+    background: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+}
+
+.new-btn {
+    background: var(--accent-primary);
+    color: white;
+    border: 1px solid var(--accent-primary);
+}
+
+.new-btn:hover {
+    background: var(--accent-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Calendar Container */
+.calendar-container {
+    overflow-x: hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Calendar Grid */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+}
+
+/* Day Headers */
+.day-header {
+    background: var(--nav-bg);
+    padding: 12px;
+    text-align: center;
+    font-weight: 700;
+    border-radius: 8px;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+/* Day Cells */
+.day-cell {
+    background: var(--input-bg);
+    border-radius: 12px;
+    min-height: 120px;
+    padding: 12px;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.day-cell:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-primary);
+}
+
+.day-cell.empty {
+    background: var(--bg-secondary);
+    opacity: 0.6;
+    border-color: transparent;
+}
+
+.day-cell span.date-label {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+/* Appointment Lists */
+.lista-reservas {
+    list-style: none;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 140px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.lista-reservas::-webkit-scrollbar {
+    width: 4px;
+}
+
+.lista-reservas::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 2px;
+}
+
+.lista-reservas::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 2px;
+}
+
+/* Appointment Items */
+.lista-reservas-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.lista-reservas-item:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--accent-primary);
+}
+
+/* Barber-specific colors */
+.lista-reservas-item.renne {
+    background: var(--renne-bg);
+    color: var(--renne-text);
+}
+
+.lista-reservas-item.lele {
+    background: var(--lele-bg);
+    color: var(--lele-text);
+}
+
+.lista-reservas-item.todos {
+    background: var(--secondary-bg);
+    color: var(--text-primary);
+}
+
+/* Status-specific styles */
+.lista-reservas-item.status-realizado {
+    background: var(--success-bg) !important;
+    color: var(--success-text) !important;
+    border-color: var(--success-text);
+}
+
+.lista-reservas-item.status-cancelado {
+    background: var(--error-bg) !important;
+    color: var(--error-text) !important;
+    border-color: var(--error-text);
+    opacity: 0.8;
+}
+
+/* Modal Enhancements for Agenda */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-content .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .barber-controls,
+    .date-controls {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .calendar {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .day-header {
+        display: none;
+    }
+    
+    .day-cell {
+        min-height: 100px;
+        padding: 8px;
+    }
+    
+    .day-cell span.date-label {
+        font-size: 0.9rem;
+    }
+    
+    .lista-reservas {
+        margin-top: 24px;
+    }
+    
+    .lista-reservas-item {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .barber-btn,
+    .month-nav,
+    .new-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 16px;
+        margin: 8px;
+    }
+    
+    .modal-content .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 320px) {
+    .calendar {
+        grid-template-columns: 1fr;
+    }
+    
+    .controls-container {
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .day-cell {
+        padding: 6px;
+        min-height: 80px;
+    }
+    
+    .lista-reservas-item {
+        font-size: 0.75rem;
+        padding: 4px 6px;
+    }
+}
+
+/* Loading States */
+.calendar.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.calendar.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Current month display styling */
+#current-month {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 8px 16px;
+    background: var(--nav-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Enhanced appointment tooltips */
+.lista-reservas-item[title] {
+    position: relative;
+}
+
+/* Focus states for accessibility */
+.barber-btn:focus,
+.month-nav:focus,
+.new-btn:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+.lista-reservas-item:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 1px;
+}
