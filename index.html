@@ -396,5 +396,53 @@
     <script src="scripts/relatorios.js"></script>
     <script src="scripts/avisos.js"></script>
     <script src="scripts/main.js"></script>
+    
+    <!-- Initialize Application -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing app...');
+            
+            // Initialize authentication first
+            if (window.Auth) {
+                console.log('Initializing Auth...');
+                window.auth = new Auth();
+                window.auth.init();
+            }
+            
+            // Initialize main app for authenticated users
+            function initMainApp() {
+                console.log('Checking if main app should be initialized...');
+                const loginContainer = document.getElementById('login-container');
+                const mainApp = document.getElementById('main-app');
+                
+                if (mainApp && !mainApp.classList.contains('hidden')) {
+                    console.log('Main app is visible, initializing navigation...');
+                    
+                    if (window.Main) {
+                        window.mainApp = new Main();
+                        window.mainApp.init();
+                        console.log('Main app initialized successfully');
+                    } else {
+                        console.error('Main class not found');
+                    }
+                } else {
+                    console.log('Main app is hidden, retrying in 500ms...');
+                    setTimeout(initMainApp, 500);
+                }
+            }
+            
+            // Start initialization
+            setTimeout(initMainApp, 200);
+        });
+        
+        // Global function for modal closing (used by onclick handlers)
+        function closeModal() {
+            Utils.hideModal('modal');
+        }
+        
+        function closeFontSizeModal() {
+            Utils.hideModal('font-size-modal');
+        }
+    </script>
 </body>
 </html>
