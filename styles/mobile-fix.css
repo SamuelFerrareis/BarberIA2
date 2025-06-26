@@ -1,0 +1,120 @@
+/* Mobile Navigation Fix - versão 2.0 */
+
+/* Reset completo para mobile */
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0 !important;
+        height: auto !important;
+        min-height: auto !important;
+    }
+    
+    .header-content {
+        flex-direction: column !important;
+        padding: 16px !important;
+        height: auto !important;
+        gap: 16px !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .header-left {
+        order: 1 !important;
+        width: auto !important;
+    }
+    
+    .header-right {
+        order: 2 !important;
+        width: auto !important;
+    }
+    
+    .header-center {
+        order: 3 !important;
+        width: 100% !important;
+    }
+    
+    /* Navegação mobile - força reset */
+    .tab-navigation {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 6px !important;
+        padding: 8px !important;
+        background: var(--secondary-bg) !important;
+        border-radius: 12px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .tab-navigation::-webkit-scrollbar {
+        display: none !important;
+    }
+    
+    /* Botões de navegação - força reset */
+    .tab-btn {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 10px 12px !important;
+        min-width: 65px !important;
+        max-width: 80px !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 8px !important;
+        color: var(--text-secondary) !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        flex-shrink: 0 !important;
+        text-decoration: none !important;
+        gap: 4px !important;
+        font-family: inherit !important;
+        outline: none !important;
+    }
+    
+    .tab-btn:hover {
+        background: var(--hover-bg) !important;
+        color: var(--text-primary) !important;
+    }
+    
+    .tab-btn.active {
+        background: var(--accent-primary) !important;
+        color: white !important;
+    }
+    
+    .tab-btn i {
+        width: 18px !important;
+        height: 18px !important;
+        stroke-width: 2 !important;
+        display: block !important;
+    }
+    
+    .tab-btn span {
+        font-size: 0.7rem !important;
+        font-weight: 500 !important;
+        white-space: nowrap !important;
+        display: block !important;
+        text-align: center !important;
+        line-height: 1 !important;
+    }
+}
+
+/* Para dispositivos muito pequenos */
+@media (max-width: 480px) {
+    .tab-btn {
+        min-width: 60px !important;
+        max-width: 70px !important;
+        padding: 8px 10px !important;
+    }
+    
+    .tab-btn span {
+        font-size: 0.65rem !important;
+    }
+    
+    .tab-btn i {
+        width: 16px !important;
+        height: 16px !important;
+    }
+}
