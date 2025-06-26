@@ -206,78 +206,81 @@ class Agenda {
     showAppointmentDetails(app) {
         const barber = app._barber || this.state.currentBarber;
         
-        this.elements.modalContent.innerHTML = `
-            <h2>Detalhes do Agendamento</h2>
-            <form id="appointment-form">
-                <div class="input-group">
-                    <label for="status-input">Status:</label>
-                    <select id="status-input">
-                        <option value="agendado" ${app.status === 'agendado' ? 'selected' : ''}>Agendado</option>
-                        <option value="realizado" ${app.status === 'realizado' ? 'selected' : ''}>Realizado</option>
-                        <option value="cancelado" ${app.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
-                        <option value="" ${!app.status ? 'selected' : ''}>-</option>
-                    </select>
-                </div>
-                
-                <div class="input-group">
-                    <label for="nome-input">Cliente:</label>
-                    <input type="text" id="nome-input" value="${app.clientenome || ''}" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="telefone-input">Telefone:</label>
-                    <input type="tel" id="telefone-input" value="${app.clientetelefone || ''}">
-                </div>
-                
-                <div class="input-group">
-                    <label for="data-input">Data:</label>
-                    <input type="date" id="data-input" value="${app.data}" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="inicio-input">Início:</label>
-                    <input type="time" id="inicio-input" value="${app.horainicio}" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="fim-input">Fim:</label>
-                    <input type="time" id="fim-input" value="${app.horafim}" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="servico-input">Serviço:</label>
-                    <input type="text" id="servico-input" value="${app.servico || ''}">
-                </div>
-                
-                <div class="input-group">
-                    <label for="valor-input">Valor:</label>
-                    <input type="number" step="0.01" id="valor-input" value="${app.valor || 0}">
-                </div>
-                
-                <div class="input-group">
-                    <label for="pagamento-input">Forma de Pagamento:</label>
-                    <input type="text" id="pagamento-input" value="${app.forma_pagamento || ''}">
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="primary-btn">
-                        <i data-feather="save"></i>
-                        Salvar Alterações
-                    </button>
-                    <button type="button" class="secondary-btn" onclick="deleteAppointment(${app.agendamentoid},'${barber}')">
-                        <i data-feather="trash-2"></i>
-                        Excluir
-                    </button>
-                    <button type="button" class="secondary-btn" onclick="closeModal()">
-                        <i data-feather="x"></i>
-                        Fechar
-                    </button>
-                </div>
-            </form>
-        `;
+        // Create DOM elements safely to prevent XSS
+        const modalContent = this.elements.modalContent;
+        modalContent.innerHTML = ''; // Clear existing content
+        
+        // Create title
+        const title = document.createElement('h2');
+        title.textContent = 'Detalhes do Agendamento';
+        modalContent.appendChild(title);
+        
+        // Create form
+        const form = document.createElement('form');
+        form.id = 'appointment-form';
+        
+        // Status select
+        const statusGroup = this.createInputGroup('Status:', 'select', 'status-input');
+        const statusSelect = statusGroup.querySelector('select');
+        ['agendado', 'realizado', 'cancelado', ''].forEach(value => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value || '-';
+            option.selected = app.status === value;
+            statusSelect.appendChild(option);
+        });
+        form.appendChild(statusGroup);
+        
+        // Text inputs - safely set values
+        const inputs = [
+            { label: 'Cliente:', type: 'text', id: 'nome-input', value: app.clientenome || '', required: true },
+            { label: 'Telefone:', type: 'tel', id: 'telefone-input', value: app.clientetelefone || '' },
+            { label: 'Data:', type: 'date', id: 'data-input', value: app.data, required: true },
+            { label: 'Início:', type: 'time', id: 'inicio-input', value: app.horainicio, required: true },
+            { label: 'Fim:', type: 'time', id: 'fim-input', value: app.horafim, required: true },
+            { label: 'Serviço:', type: 'text', id: 'servico-input', value: app.servico || '' },
+            { label: 'Valor:', type: 'number', id: 'valor-input', value: app.valor || 0, step: '0.01' },
+            { label: 'Forma de Pagamento:', type: 'text', id: 'pagamento-input', value: app.forma_pagamento || '' }
+        ];
+        
+        inputs.forEach(config => {
+            const group = this.createInputGroup(config.label, config.type, config.id);
+            const input = group.querySelector('input');
+            input.value = config.value;
+            if (config.required) input.required = true;
+            if (config.step) input.step = config.step;
+            form.appendChild(group);
+        });
+        
+        // Form actions
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'form-actions';
+        
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'submit';
+        saveBtn.className = 'primary-btn';
+        saveBtn.innerHTML = '<i data-feather="save"></i> Salvar Alterações';
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'secondary-btn';
+        deleteBtn.innerHTML = '<i data-feather="trash-2"></i> Excluir';
+        deleteBtn.onclick = () => window.deleteAppointment(app.agendamentoid, barber);
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'secondary-btn';
+        closeBtn.innerHTML = '<i data-feather="x"></i> Fechar';
+        closeBtn.onclick = () => window.closeModal();
+        
+        actionsDiv.appendChild(saveBtn);
+        actionsDiv.appendChild(deleteBtn);  
+        actionsDiv.appendChild(closeBtn);
+        form.appendChild(actionsDiv);
+        
+        modalContent.appendChild(form);
         
         // Setup form submission
-        const form = document.getElementById('appointment-form');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.salvarAlteracoes(app.agendamentoid, barber);
@@ -285,6 +288,28 @@ class Agenda {
         
         Utils.showModal('modal');
         feather.replace();
+    }
+
+    createInputGroup(labelText, inputType, inputId) {
+        const group = document.createElement('div');
+        group.className = 'input-group';
+        
+        const label = document.createElement('label');
+        label.setAttribute('for', inputId);
+        label.textContent = labelText;
+        
+        let input;
+        if (inputType === 'select') {
+            input = document.createElement('select');
+        } else {
+            input = document.createElement('input');
+            input.type = inputType;
+        }
+        input.id = inputId;
+        
+        group.appendChild(label);
+        group.appendChild(input);
+        return group;
     }
 
     async salvarAlteracoes(id, barber) {
