@@ -201,6 +201,32 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Chart colors for all themes */
+:root {
+    --chart-primary: #4a90e2;
+    --chart-secondary: #e74c3c;
+    --chart-accent: #2ecc71;
+    --chart-warning: #f39c12;
+    --chart-info: #9b59b6;
+    --chart-success: #27ae60;
+    --chart-grid: rgba(255, 255, 255, 0.1);
+    --chart-text: var(--text-secondary);
+}
+
+[data-theme="light"] {
+    --chart-grid: rgba(0, 0, 0, 0.1);
+    --chart-text: var(--text-secondary);
+}
+
+[data-theme="colorful"] {
+    --chart-primary: #ff6b6b;
+    --chart-secondary: #4ecdc4;
+    --chart-accent: #45b7d1;
+    --chart-warning: #ffc107;
+    --chart-info: #9b59b6;
+    --chart-success: #96ceb4;
+}
+
 /* Custom scrollbar for dark theme */
 ::-webkit-scrollbar {
     width: 8px;
