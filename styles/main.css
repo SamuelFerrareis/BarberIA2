@@ -997,6 +997,110 @@ body {
     }
 }
 
+/* Schedule Selector Styles */
+.schedule-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.day-schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--background-primary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.day-schedule:hover {
+    border-color: var(--accent-primary);
+    box-shadow: 0 2px 8px rgba(0, 212, 255, 0.1);
+}
+
+.day-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.day-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
+    cursor: pointer;
+}
+
+.day-label {
+    font-size: 0.95rem;
+    user-select: none;
+}
+
+.time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: var(--secondary-bg);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.time-inputs input[type="time"] {
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--background-primary);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.time-inputs input[type="time"]:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+}
+
+.time-separator {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Responsive adjustments for schedule selector */
+@media (max-width: 768px) {
+    .schedule-selector {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .day-schedule {
+        padding: 10px;
+    }
+    
+    .time-inputs {
+        gap: 8px;
+        padding: 6px 10px;
+    }
+    
+    .time-inputs input[type="time"] {
+        font-size: 0.85rem;
+        padding: 4px 6px;
+    }
+}
+
 @media (max-width: 320px) {
     .calendar {
         grid-template-columns: 1fr;

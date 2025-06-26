@@ -267,9 +267,9 @@ class Barbeiros {
                 </div>
                 
                 <div class="input-group">
-                    <label>Dias Disponíveis</label>
-                    <div class="days-selector">
-                        ${this.renderDaysSelector(barber?.dias_disponiveis)}
+                    <label>Horários por Dia da Semana</label>
+                    <div class="schedule-selector">
+                        ${this.renderScheduleSelector(barber?.horarios_personalizados)}
                     </div>
                 </div>
                 
@@ -302,24 +302,46 @@ class Barbeiros {
         feather.replace();
     }
 
-    renderDaysSelector(selectedDays = []) {
-        const allDays = [
+    renderScheduleSelector(customSchedules = {}) {
+        const days = [
             { key: 'domingo', label: 'Domingo' },
-            { key: 'segunda', label: 'Segunda' },
-            { key: 'terca', label: 'Terça' },
-            { key: 'quarta', label: 'Quarta' },
-            { key: 'quinta', label: 'Quinta' },
-            { key: 'sexta', label: 'Sexta' },
+            { key: 'segunda', label: 'Segunda-feira' },
+            { key: 'terca', label: 'Terça-feira' },
+            { key: 'quarta', label: 'Quarta-feira' },
+            { key: 'quinta', label: 'Quinta-feira' },
+            { key: 'sexta', label: 'Sexta-feira' },
             { key: 'sabado', label: 'Sábado' }
         ];
 
-        return allDays.map(day => `
-            <label class="day-checkbox">
-                <input type="checkbox" name="available-days" value="${day.key}" 
-                       ${selectedDays.includes(day.key) ? 'checked' : ''}>
-                <span>${day.label}</span>
-            </label>
-        `).join('');
+        return days.map(day => {
+            const schedule = customSchedules?.[day.key] || { ativo: false, inicio: '08:00', fim: '18:00' };
+            
+            return `
+                <div class="day-schedule">
+                    <label class="day-checkbox">
+                        <input type="checkbox" 
+                               class="day-active" 
+                               data-day="${day.key}" 
+                               ${schedule.ativo ? 'checked' : ''}
+                               onchange="this.closest('.day-schedule').querySelector('.time-inputs').style.display = this.checked ? 'flex' : 'none'">
+                        <span class="day-label">${day.label}</span>
+                    </label>
+                    <div class="time-inputs" style="display: ${schedule.ativo ? 'flex' : 'none'}">
+                        <input type="time" 
+                               class="time-start" 
+                               data-day="${day.key}" 
+                               value="${schedule.inicio}" 
+                               title="Horário de início">
+                        <span class="time-separator">até</span>
+                        <input type="time" 
+                               class="time-end" 
+                               data-day="${day.key}" 
+                               value="${schedule.fim}" 
+                               title="Horário de fim">
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
     async saveBarber() {
@@ -340,8 +362,31 @@ class Barbeiros {
     }
 
     collectFormData() {
-        const availableDays = Array.from(document.querySelectorAll('input[name="available-days"]:checked'))
-            .map(cb => cb.value);
+        // Coletar horários personalizados por dia
+        const customSchedules = {};
+        const dayCheckboxes = document.querySelectorAll('.day-active');
+        
+        dayCheckboxes.forEach(checkbox => {
+            const day = checkbox.dataset.day;
+            const isActive = checkbox.checked;
+            
+            if (isActive) {
+                const startTime = document.querySelector(`.time-start[data-day="${day}"]`).value;
+                const endTime = document.querySelector(`.time-end[data-day="${day}"]`).value;
+                
+                customSchedules[day] = {
+                    ativo: true,
+                    inicio: startTime,
+                    fim: endTime
+                };
+            } else {
+                customSchedules[day] = {
+                    ativo: false,
+                    inicio: '08:00',
+                    fim: '18:00'
+                };
+            }
+        });
         
         const specialties = document.getElementById('barber-specialties').value
             .split('\n')
@@ -357,7 +402,7 @@ class Barbeiros {
             horario_fim: document.getElementById('barber-end-time').value,
             comissao: parseFloat(document.getElementById('barber-commission').value) || 0,
             cor_tema: document.getElementById('barber-color').value,
-            dias_disponiveis: availableDays,
+            horarios_personalizados: customSchedules,
             especialidades: specialties
         };
     }
