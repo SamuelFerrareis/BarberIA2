@@ -43,10 +43,16 @@ class Main {
         const tabButtons = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
 
-        tabButtons.forEach(button => {
+        console.log('Setting up navigation with', tabButtons.length, 'buttons');
+
+        tabButtons.forEach((button, index) => {
+            console.log('Setting up button', index, 'with data-tab:', button.getAttribute('data-tab'));
+            
             button.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const tabName = button.getAttribute('data-tab');
+                console.log('Button clicked:', tabName);
                 if (tabName) {
                     this.switchTab(tabName);
                 }
