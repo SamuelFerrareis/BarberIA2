@@ -27,14 +27,15 @@ class Auth {
 
     async checkExistingSession() {
         try {
-            // Check local storage first
-            const savedUser = Utils.getLocalStorage('currentUser');
-            if (savedUser) {
-                // Verify session with Supabase
-                const { data: { session }, error } = await this.supabase.auth.getSession();
+            // Check for stored user session
+            const storedUser = Utils.getLocalStorage('currentUser');
+            
+            if (storedUser && storedUser.expires) {
+                // Check if session is still valid
+                const now = new Date().getTime();
                 
-                if (session && !error) {
-                    this.currentUser = session.user;
+                if (now < storedUser.expires) {
+                    this.currentUser = storedUser;
                     this.showMainApp();
                     return;
                 }
