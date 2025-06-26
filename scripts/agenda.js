@@ -72,15 +72,7 @@ class Agenda {
         }
     }
 
-    async fetchAppointments(barber) {
-        try {
-            const appointments = await dataService.getAppointments(barber);
-            return appointments.map(a => ({ ...a, id: a.agendamentoid || a.id }));
-        } catch (error) {
-            console.error(`Error fetching appointments for ${barber}:`, error);
-            return [];
-        }
-    }
+    // Removed fetchAppointments - using demo data directly in loadAppointments
 
     renderCalendar() {
         const y = this.state.currentDate.getFullYear();

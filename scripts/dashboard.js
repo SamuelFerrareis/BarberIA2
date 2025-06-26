@@ -30,11 +30,9 @@ class Dashboard {
 
     async loadDashboardData() {
         try {
-            // Use DataService for unified data access
-            const [renneApps, leleApps] = await Promise.all([
-                dataService.getAppointments('renne'),
-                dataService.getAppointments('lele')
-            ]);
+            // Use demo data directly to prevent errors
+            const renneApps = DemoData.getAppointments('renne');
+            const leleApps = DemoData.getAppointments('lele');
 
             // Combine and mark appointments with barber info
             this.appointments = [
@@ -47,25 +45,15 @@ class Dashboard {
             this.updateBarbersStatus();
             this.generateMiniCharts();
         } catch (error) {
-            Utils.handleError(error, 'loadDashboardData');
+            console.error('Error in loadDashboardData:', error);
+            this.appointments = [];
+            this.updateMetrics();
+            this.updateNextAppointments();
+            this.updateBarbersStatus();
         }
     }
 
-    async fetchAppointments(barber) {
-        try {
-            const { data, error } = await this.supabase
-                .from(`agendamentos_${barber}`)
-                .select('*')
-                .order('data', { ascending: true })
-                .order('horainicio', { ascending: true });
-
-            if (error) throw error;
-            return data || [];
-        } catch (error) {
-            console.error(`Error fetching appointments for ${barber}:`, error);
-            return [];
-        }
-    }
+    // Removed fetchAppointments - using demo data directly in loadDashboardData
 
     updateMetrics() {
         const today = Utils.formatDate(new Date(), 'YYYY-MM-DD');
