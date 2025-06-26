@@ -8,9 +8,11 @@ class Auth {
     }
 
     init() {
-        // Initialize Supabase client
-        const SUPABASE_URL = process.env.SUPABASE_URL || 'https://your-project.supabase.co';
-        const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
+        // Initialize Supabase client with environment variables
+        const SUPABASE_URL = window.CONFIG?.SUPABASE_URL || 
+            (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
+        const SUPABASE_KEY = window.CONFIG?.SUPABASE_ANON_KEY || 
+            (typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : '');
         
         try {
             this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);

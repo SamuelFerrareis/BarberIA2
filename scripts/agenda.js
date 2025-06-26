@@ -9,11 +9,11 @@ class Agenda {
             currentBarber: 'todos'
         };
         this.elements = {};
-        this.MONTH_NAMES = [
+        this.MONTH_NAMES = window.CONFIG?.MONTH_NAMES || [
             "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
             "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
         ];
-        this.WEEK_DAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+        this.WEEK_DAYS = window.CONFIG?.WEEK_DAYS || ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
     }
 
     init() {
