@@ -28,30 +28,35 @@ class Dashboard {
         }, 5 * 60 * 1000);
     }
 
-    async loadDashboardData() {
-        try {
-            // Use demo data directly to prevent errors
-            const renneApps = DemoData.getAppointments('renne');
-            const leleApps = DemoData.getAppointments('lele');
+   async loadDashboardData() {
+    try {
+        const { data, error } = await window.dataService.supabase
+            .from('agendamentos_todos')
+            .select('*');
 
-            // Combine and mark appointments with barber info
-            this.appointments = [
-                ...renneApps.map(app => ({ ...app, _barber: 'renne' })),
-                ...leleApps.map(app => ({ ...app, _barber: 'lele' }))
-            ];
+        if (error) throw error;
 
-            this.updateMetrics();
-            this.updateNextAppointments();
-            this.updateBarbersStatus();
-            this.generateMiniCharts();
-        } catch (error) {
-            console.error('Error in loadDashboardData:', error);
-            this.appointments = [];
-            this.updateMetrics();
-            this.updateNextAppointments();
-            this.updateBarbersStatus();
-        }
+        // Marcar o barbeiro corretamente
+        this.appointments = (data || []).map(app => ({
+            ...app,
+            _barber: app.barbeiro
+        }));
+
+        this.updateMetrics();
+        this.updateNextAppointments();
+        this.updateBarbersStatus();
+        this.generateMiniCharts();
+
+    } catch (error) {
+        console.error('Erro ao carregar dados do dashboard:', error);
+        Utils.showToast('Erro ao carregar dados do dashboard', 'error');
+        this.appointments = [];
+        this.updateMetrics();
+        this.updateNextAppointments();
+        this.updateBarbersStatus();
     }
+}
+
 
     // Removed fetchAppointments - using demo data directly in loadDashboardData
 
@@ -102,10 +107,9 @@ class Dashboard {
 
         // Get upcoming appointments (today after current time, or future dates)
         const upcoming = this.appointments
-            .filter(app => {
-                if (app.data > today) return true;
-                if (app.data === today && app.horainicio > currentTime) return true;
-                return false;
+  .filter(app => {
+    const dateTime = new Date(`${app.data}T${app.horainicio}`);
+    return app.status !== 'realizado'; // mostra tudo que ainda não foi feito
             })
             .filter(app => app.status !== 'cancelado')
             .slice(0, 5);

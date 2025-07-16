@@ -8,10 +8,11 @@ class Relatorios {
     }
 
     init() {
-        // Use demo data only to prevent errors
-        this.setupEventListeners();
-        this.loadReportsData();
-    }
+    this.setupEventListeners();
+    this.addExportButtons(); // ✅ ADICIONADO
+    this.loadReportsData();
+}
+
 
     setupEventListeners() {
         const periodSelect = document.getElementById('report-period');
@@ -30,20 +31,39 @@ class Relatorios {
         }
     }
 
+    addExportButtons() {
+    const container = document.querySelector('.relatorios-header');
+    if (!container || document.getElementById('export-btns')) return;
+
+    const group = document.createElement('div');
+    group.className = 'report-export-group';
+    group.id = 'export-btns';
+    group.innerHTML = `
+        <button class="secondary-btn" onclick="exportExcel()">
+            <i data-feather="file-text"></i> Exportar Excel (Cortes)
+        </button>
+    `;
+    container.appendChild(group);
+    feather.replace();
+}
+
+
     async loadReportsData() {
         try {
             // Show loading for all charts
             this.showChartsLoading();
 
-            // Use demo data directly to prevent errors
-            const renneApps = DemoData.getAppointments('renne');
-            const leleApps = DemoData.getAppointments('lele');
+            const { data, error } = await window.dataService.supabase
+  .from('agendamentos_todos')
+  .select('*');
 
-            // Combine and mark appointments with barber info
-            this.appointments = [
-                ...renneApps.map(app => ({ ...app, _barber: 'renne' })),
-                ...leleApps.map(app => ({ ...app, _barber: 'lele' }))
-            ];
+if (error) throw error;
+
+this.appointments = (data || []).map(app => ({
+  ...app,
+  _barber: app.barbeiro
+}));
+
 
             // Filter by selected period and barber
             const filteredAppointments = this.filterAppointments();
@@ -473,13 +493,16 @@ class Relatorios {
     }
 
     showChartsLoading() {
-        const chartIds = ['appointments-chart', 'revenue-chart', 'status-chart', 'hours-chart'];
-        
-        chartIds.forEach(id => {
-            const container = document.querySelector(`#${id}`).parentElement;
-            Utils.showLoading(container, 'Carregando gráfico...');
-        });
-    }
+    const ids = ['chart-barbers', 'chart-income', 'chart-status', 'chart-hours'];
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.parentElement) {
+  Utils.showLoading(el.parentElement, 'Carregando gráfico...');
+}
+    });
+}
+
 
     showChartsError() {
         const chartIds = ['appointments-chart', 'revenue-chart', 'status-chart', 'hours-chart'];
@@ -678,8 +701,81 @@ class Relatorios {
         });
         this.charts = {};
     }
+
+    // Exportar gráficos como imagem PNG
+exportCharts() {
+    const chartIds = ['appointments-chart', 'revenue-chart', 'status-chart', 'hours-chart'];
+    chartIds.forEach(id => {
+        const canvas = document.getElementById(id);
+        if (canvas) {
+            const image = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = `${id}.png`;
+            link.click();
+        }
+    });
 }
 
-// Create global instance
+// Exportar dados como .csv (lista simples)
+exportCSV() {
+    const data = this.filterAppointments();
+    if (!data.length) return Utils.showToast('Nada a exportar', 'warning');
+
+    const headers = ['Data', 'Hora', 'Cliente', 'Serviço', 'Barbeiro', 'Status', 'Valor'];
+    const rows = data.map(app => [
+        app.data,
+        app.horainicio,
+        app.clientenome,
+        app.servico,
+        app._barber,
+        app.status,
+        Utils.formatCurrency(app.valor)
+    ]);
+
+    let csv = [headers, ...rows].map(r => r.join(';')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'lista_cortes.csv';
+    link.click();
+}
+
+// Exportar para Excel (.xlsx)
+exportExcel() {
+    const data = this.filterAppointments();
+    if (!data.length) return Utils.showToast('Nada a exportar', 'warning');
+
+    const rows = data.map(app => ({
+        Data: app.data,
+        Hora: app.horainicio,
+        Cliente: app.clientenome,
+        Serviço: app.servico,
+        Barbeiro: app._barber,
+        Status: app.status,
+        Valor: parseFloat(app.valor) || 0
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Relatório');
+
+    XLSX.writeFile(workbook, 'relatorio_cortes.xlsx');
+}
+
+}
+
+
+// Cria a instância global corretamente
 window.Relatorios = new Relatorios();
+window.Relatorios.init(); // isso chama addExportButtons() também
+
+// ✅ Corrige o erro "is not a function"
+window.exportCharts = () => window.Relatorios.exportCharts();
+window.exportExcel = () => window.Relatorios.exportExcel();
+window.exportCSV = () => window.Relatorios.exportCSV();
+
+
 

@@ -2,46 +2,50 @@
 
 class Auth {
     constructor() {
-        this.supabase = null;
+        this.supabase = window.supabase;
         this.currentUser = null;
-        this.init();
     }
 
     init() {
-        // Initialize Supabase client with environment variables
-        const SUPABASE_URL = window.CONFIG?.SUPABASE_URL || 
-            (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '');
-        const SUPABASE_KEY = window.CONFIG?.SUPABASE_ANON_KEY || 
-            (typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : '');
-        
-        try {
-            this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        } catch (error) {
-            console.error('Failed to initialize Supabase client:', error);
-            Utils.showToast('Erro ao conectar com o servidor', 'error');
+        const url = window.CONFIG.SUPABASE_URL;
+        const key = window.CONFIG.SUPABASE_ANON_KEY;
+
+        if (!url || !key) {
+            console.error('❌ Supabase URL ou Key ausente!');
+            return;
         }
 
-        // Check for existing session
+        if (!window.supabase) {
+            console.error('❌ Cliente Supabase não está disponível! Verifique o import.');
+            return;
+        }
+
+        this.supabase = window.supabase;
+        console.log('✅ Supabase client inicializado com sucesso!');
+
         this.checkExistingSession();
+    }
+
+    getSupabaseClient() {
+        return this.supabase;
     }
 
     async checkExistingSession() {
         try {
-            // Check for stored user session
             const storedUser = Utils.getLocalStorage('currentUser');
-            
             if (storedUser && storedUser.expires) {
-                // Check if session is still valid
                 const now = new Date().getTime();
-                
                 if (now < storedUser.expires) {
                     this.currentUser = storedUser;
                     this.showMainApp();
                     return;
-                }
+                } if (!storedUser) {
+    console.log('⚠️ Nenhum usuário encontrado no localStorage. Mostrando login...');
+    this.showLogin();
+    return;
+}
+
             }
-            
-            // No valid session, show login
             this.showLogin();
         } catch (error) {
             console.error('Error checking session:', error);
@@ -51,13 +55,12 @@ class Auth {
 
     async login(email, password) {
         try {
-            // Sistema de autenticação simples para demonstração
             const validCredentials = [
                 { email: 'admin@barbearia.com', password: 'admin123', name: 'Administrador' },
                 { email: 'barbeiro@barbearia.com', password: 'barbeiro123', name: 'Barbeiro' }
             ];
 
-            const user = validCredentials.find(cred => 
+            const user = validCredentials.find(cred =>
                 cred.email === email && cred.password === password
             );
 
@@ -65,7 +68,6 @@ class Auth {
                 throw new Error('Email ou senha incorretos');
             }
 
-            // Criar sessão local
             this.currentUser = {
                 id: Date.now(),
                 email: user.email,
@@ -89,14 +91,8 @@ class Auth {
 
     async logout() {
         try {
-            const { error } = await this.supabase.auth.signOut();
-            
-            if (error) {
-                throw error;
-            }
-
-            this.currentUser = null;
             Utils.removeLocalStorage('currentUser');
+            this.currentUser = null;
             Utils.showToast('Logout realizado com sucesso!', 'success');
             this.showLogin();
         } catch (error) {
@@ -106,20 +102,17 @@ class Auth {
     }
 
     showLogin() {
-        document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.add('hidden');
-        document.getElementById('login-screen').classList.remove('hidden');
-        
-        // Setup login form
+        document.getElementById('loading-screen')?.classList.add('hidden');
+        document.getElementById('main-app')?.classList.add('hidden');
+        document.getElementById('login-screen')?.classList.remove('hidden');
         this.setupLoginForm();
     }
 
     showMainApp() {
-        document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('main-app').classList.remove('hidden');
-        
-        // Initialize main app
+        document.getElementById('loading-screen')?.classList.add('hidden');
+        document.getElementById('login-screen')?.classList.add('hidden');
+        document.getElementById('main-app')?.classList.remove('hidden');
+
         if (window.Main) {
             window.Main.init();
         }
@@ -129,35 +122,31 @@ class Auth {
         const loginForm = document.getElementById('login-form');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
-        
+
         if (loginForm) {
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
                 const email = emailInput.value.trim();
                 const password = passwordInput.value.trim();
-                
-                // Validate inputs
+
                 if (!email || !password) {
                     this.showLoginError('Por favor, preencha todos os campos.');
                     return;
                 }
-                
+
                 if (!Utils.validateEmail(email)) {
                     this.showLoginError('Por favor, digite um email válido.');
                     return;
                 }
-                
-                // Show loading state
+
                 const submitBtn = loginForm.querySelector('button[type="submit"]');
                 const originalText = submitBtn.textContent;
-                submitBtn.innerHTML = '<div class="loading-spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+                submitBtn.innerHTML = '<div class="loading-spinner" style="width: 20px; height: 20px;"></div>';
                 submitBtn.disabled = true;
-                
+
                 try {
                     await this.login(email, password);
                 } finally {
-                    // Restore button state
                     submitBtn.textContent = originalText;
                     submitBtn.disabled = false;
                 }
@@ -170,11 +159,7 @@ class Auth {
         if (errorElement) {
             errorElement.textContent = message;
             errorElement.classList.remove('hidden');
-            
-            // Auto hide after 5 seconds
-            setTimeout(() => {
-                errorElement.classList.add('hidden');
-            }, 5000);
+            setTimeout(() => errorElement.classList.add('hidden'), 5000);
         }
     }
 
@@ -188,7 +173,7 @@ class Auth {
             'Password is too short': 'Senha muito curta. Mínimo 6 caracteres.',
             'Network error': 'Erro de conexão. Verifique sua internet.',
         };
-        
+
         return errorMessages[error.message] || error.message || 'Erro desconhecido. Tente novamente.';
     }
 
@@ -196,14 +181,10 @@ class Auth {
         return this.currentUser;
     }
 
-    getSupabaseClient() {
-        return this.supabase;
-    }
-
     isAuthenticated() {
         return !!this.currentUser;
     }
 }
 
-// Initialize authentication
+// Instancia global
 window.Auth = new Auth();

@@ -17,7 +17,7 @@ class Agenda {
     }
 
     init() {
-        this.supabase = window.Auth.getSupabaseClient();
+        this.supabase = window.dataService.supabase;
         this.setupElements();
         this.setupEventListeners();
         this.updateBarberButtons();
@@ -47,76 +47,100 @@ class Agenda {
         window.closeModal = this.closeModal.bind(this);
     }
 
-    async loadAppointments() {
-        Utils.showLoading('calendar', 'Carregando agendamentos...');
-        
-        try {
-            // Direct demo data usage to prevent errors
-            if (this.state.currentBarber === 'todos') {
-                this.state.appointments = [
-                    ...DemoData.getAppointments('renne').map(a => ({ ...a, _barber: 'renne' })),
-                    ...DemoData.getAppointments('lele').map(a => ({ ...a, _barber: 'lele' }))
-                ];
-            } else {
-                this.state.appointments = DemoData.getAppointments(this.state.currentBarber)
-                    .map(a => ({ ...a, _barber: this.state.currentBarber }));
-            }
-            
-            this.renderTodaySchedule();
-            this.renderCalendar();
-        } catch (error) {
-            console.error('Error in loadAppointments:', error);
-            this.state.appointments = [];
-            this.renderTodaySchedule();
-            this.renderCalendar();
-        } finally {
-            Utils.hideLoading('calendar');
+   async loadAppointments() {
+    Utils.showLoading('calendar', 'Carregando agendamentos...');
+
+    try {
+    let { data, error } = await this.supabase
+        .from('agendamentos_todos')
+        .select('*');
+
+    console.log('Agendamentos recebidos:', data); // ✅ AQUI
+
+    if (error) throw error;
+    
+        // Filtro por barbeiro, se necessário
+        if (this.state.currentBarber !== 'todos') {
+            data = data.filter(app => app.barbeiro === this.state.currentBarber);
         }
+
+        // Adiciona campo auxiliar para cor, etc.
+       this.state.appointments = data.map(app => {
+    const originalData = app.data;
+
+    // Se estiver no formato dd/mm/yyyy, converte para yyyy-mm-dd
+    let parsedData = originalData;
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(originalData)) {
+        const [dia, mes, ano] = originalData.split('/');
+        parsedData = `${ano}-${mes}-${dia}`;
     }
 
-    renderTodaySchedule() {
-        const today = Utils.formatDate(new Date(), 'YYYY-MM-DD');
-        const todayDateEl = document.getElementById('today-date');
-        const todayHoursEl = document.getElementById('today-hours');
-        
-        if (!todayDateEl || !todayHoursEl) return;
-        
-        // Set today's date
-        todayDateEl.textContent = Utils.formatDate(new Date(), 'DD/MM/YYYY');
-        
-        // Get today's appointments and sort by time
-        const todayAppointments = this.state.appointments
-            .filter(app => app.data === today)
-            .sort((a, b) => {
-                const timeA = a.horario || '00:00';
-                const timeB = b.horario || '00:00';
-                return timeA.localeCompare(timeB);
-            });
-        
-        // Render appointments list
-        if (todayAppointments.length === 0) {
-            todayHoursEl.innerHTML = '<div class="no-appointments">Nenhum agendamento para hoje</div>';
-        } else {
-            todayHoursEl.innerHTML = todayAppointments.map(appointment => {
-                const barberColor = Utils.getBarberColor(appointment._barber);
-                const statusColor = Utils.getStatusColor(appointment.status || 'agendado');
-                
-                return `
-                    <div class="appointment-item" style="border-left: 4px solid ${barberColor}">
-                        <div class="appointment-time">${appointment.horario || 'Sem horário'}</div>
-                        <div class="appointment-details">
-                            <div class="appointment-client">${appointment.nome}</div>
-                            <div class="appointment-service">${appointment.servico}</div>
-                            <div class="appointment-barber">${appointment._barber}</div>
-                        </div>
-                        <div class="appointment-status" style="background: ${statusColor}">
-                            ${appointment.status || 'Agendado'}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+    return {
+        ...app,
+        data: parsedData,
+        _barber: app.barbeiro
+    };
+});
+
+
+        this.renderTodaySchedule();
+        this.renderCalendar();
+
+    } catch (error) {
+        console.error('Erro ao carregar agendamentos:', error);
+        this.state.appointments = [];
+        this.renderTodaySchedule();
+        this.renderCalendar();
+    } finally {
+        Utils.hideLoading('calendar');
     }
+}
+
+
+renderTodaySchedule() {
+    const today = Utils.formatDate(new Date(), 'YYYY-MM-DD');
+    const todayDateEl = document.getElementById('today-date');
+    const todayHoursEl = document.getElementById('today-hours');
+    
+    if (!todayDateEl || !todayHoursEl) return;
+    
+    // Set today's date in header
+    todayDateEl.textContent = Utils.formatDate(new Date(), 'DD/MM/YYYY');
+    
+    // Filter today's appointments and sort by horainicio
+    const todayAppointments = this.state.appointments
+        .filter(app => app.data === today)
+        .sort((a, b) => {
+            const timeA = a.horainicio || '00:00';
+            const timeB = b.horainicio || '00:00';
+            return timeA.localeCompare(timeB);
+        });
+    
+    // Render
+    if (todayAppointments.length === 0) {
+        todayHoursEl.innerHTML = '<div class="no-appointments">Nenhum agendamento para hoje</div>';
+    } else {
+        todayHoursEl.innerHTML = todayAppointments.map(appointment => {
+            const barberColor = Utils.getBarberColor(appointment._barber);
+            const statusColor = Utils.getStatusColor(appointment.status || 'agendado');
+            
+            return `
+                <div class="appointment-item" style="border-left: 4px solid ${barberColor}">
+                    <div class="appointment-time">${appointment.horainicio || 'Sem horário'}</div>
+                    <div class="appointment-details">
+                        <div class="appointment-client">${appointment.clientenome}</div>
+                        <div class="appointment-service">${appointment.servico}</div>
+                        <div class="appointment-barber">${appointment._barber}</div>
+                    </div>
+                    <div class="appointment-status" style="background: ${statusColor}">
+                        ${appointment.status || 'Agendado'}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
 
     // Removed fetchAppointments - using demo data directly in loadAppointments
 
@@ -327,7 +351,7 @@ class Agenda {
             };
 
             const { error } = await this.supabase
-                .from(`agendamentos_${barber}`)
+                .from('agendamentos_todos')
                 .update(upd)
                 .eq('agendamentoid', id);
 
@@ -346,7 +370,7 @@ class Agenda {
 
         try {
             const { error } = await this.supabase
-                .from(`agendamentos_${barber}`)
+                .from('agendamentos_todos')
                 .delete()
                 .eq('agendamentoid', id);
 
@@ -454,11 +478,12 @@ class Agenda {
                 servico: document.getElementById("new-servico").value,
                 valor: parseFloat(document.getElementById("new-valor").value) || 0,
                 forma_pagamento: document.getElementById("new-pagamento").value,
-                status: 'agendado'
+                status: 'agendado',
+                barbeiro: barbeiro
             };
 
             const { error } = await this.supabase
-                .from(`agendamentos_${barber}`)
+                .from('agendamentos_todos')
                 .insert(payload);
 
             if (error) throw error;

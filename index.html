@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles/agenda.css">
     <link rel="stylesheet" href="styles/relatorios.css">
     <link rel="stylesheet" href="styles/login.css">
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
     
     <!-- External Libraries -->
@@ -24,7 +25,7 @@
     <script>
         // Environment variables for Supabase connection
         window.SUPABASE_URL = 'https://ojbgkckqertayszeeysk.supabase.co';
-        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYmdrY2txZXJ0YXlzemVleXNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUyNTEzNzAsImV4cCI6MjA1MDgyNzM3MH0.hCYt5X5Nuu8z7Vr-9v9B5Wj_YWZ3QV9M_9xTn_A4_5s';
+        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYmdrY2txZXJ0YXlzemVleXNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1OTg3NTUsImV4cCI6MjA2NTE3NDc1NX0.U01u90qtqPKYQu87snwCsOZEmIFxiw6hRVLj61xRIpY';
     </script>
     
     <!-- Configuration -->
@@ -408,51 +409,71 @@
     <script src="scripts/main.js"></script>
     
     <!-- Initialize Application -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing app...');
-            
-            // Initialize authentication first
-            if (window.Auth) {
-                console.log('Initializing Auth...');
-                window.auth = new Auth();
-                window.auth.init();
-            }
-            
-            // Initialize main app for authenticated users
-            function initMainApp() {
-                console.log('Checking if main app should be initialized...');
-                const loginContainer = document.getElementById('login-container');
-                const mainApp = document.getElementById('main-app');
-                
-                if (mainApp && !mainApp.classList.contains('hidden')) {
-                    console.log('Main app is visible, initializing navigation...');
-                    
-                    if (window.Main) {
-                        window.mainApp = new Main();
-                        window.mainApp.init();
-                        console.log('Main app initialized successfully');
-                    } else {
-                        console.error('Main class not found');
-                    }
+   <script>
+    // Inicializa o Supabase client globalmente
+    if (!window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+        window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+        console.log('✅ Supabase client criado com sucesso');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM loaded, initializing app...');
+
+        // Inicializa autenticação
+        if (window.Auth) {
+            console.log('Initializing Auth...');
+            window.auth = new Auth();
+
+            // Modifica temporariamente o showMainApp para garantir que Main seja inicializado depois
+            const originalShowMainApp = Auth.prototype.showMainApp;
+            Auth.prototype.showMainApp = function () {
+                originalShowMainApp.call(this);
+                console.log('🔐 Login confirmado, iniciando Main...');
+                initMainApp(); // só inicia o Main depois do login
+            };
+
+            window.auth.init();
+        }
+
+
+        setTimeout(() => {
+    const user = Utils.getLocalStorage('currentUser');
+    if (!user) {
+        console.warn('⚠️ Nenhum usuário logado. Forçando exibição do login.');
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('loading-screen').classList.add('hidden');
+    }
+}, 1000);
+
+
+        // Inicializa o app principal depois do login
+        function initMainApp() {
+            const mainApp = document.getElementById('main-app');
+
+            if (mainApp && !mainApp.classList.contains('hidden')) {
+                if (window.Main) {
+                    window.mainApp = new Main();
+                    window.mainApp.init();
+                    console.log('✅ Main app iniciado');
                 } else {
-                    console.log('Main app is hidden, retrying in 500ms...');
-                    setTimeout(initMainApp, 500);
+                    console.error('❌ Classe Main não encontrada');
                 }
+            } else {
+                console.log('⌛ Aguardando exibição do Main app...');
+                setTimeout(initMainApp, 300);
             }
-            
-            // Start initialization
-            setTimeout(initMainApp, 200);
-        });
-        
-        // Global function for modal closing (used by onclick handlers)
-        function closeModal() {
+        }
+
+        // Modais globais
+        window.closeModal = function () {
             Utils.hideModal('modal');
-        }
-        
-        function closeFontSizeModal() {
+        };
+
+        window.closeFontSizeModal = function () {
             Utils.hideModal('font-size-modal');
-        }
-    </script>
+        };
+    });
+</script>
+
 </body>
 </html>

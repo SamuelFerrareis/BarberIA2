@@ -30,11 +30,11 @@
 }
 
 .report-filters select {
+    color: var(--text-primary);
     background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 12px 16px;
-    color: var(--text-primary);
     font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
@@ -51,6 +51,11 @@
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.report-filters select option {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
 }
 
 /* Grid de Relatórios */
@@ -389,6 +394,8 @@
     
     .report-filters {
         justify-content: center;
+        background-color: var(--input-bg);
+        color: var(--text-primary);
     }
     
     .reports-grid {
@@ -515,4 +522,14 @@
     font-size: 0.85rem !important;
     padding: 8px 12px !important;
     box-shadow: var(--shadow-md) !important;
+}
+
+.report-filters select option {
+    background-color: #1c1f2a;
+    color: #fff;
+}
+
+.report-filters select:focus option:checked {
+    background-color: #00d4ff;
+    color: #000;
 }

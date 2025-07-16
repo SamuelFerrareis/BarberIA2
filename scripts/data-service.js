@@ -1,54 +1,50 @@
-// Unified data service that handles both demo and real data
+// Ajustado para usar apenas a tabela 'agendamento_todos'
 
 class DataService {
     constructor() {
-        this.isDemo = true; // Start with demo mode by default
+        this.isDemo = false;
         this.supabase = null;
         this.initializeSupabase();
     }
 
     initializeSupabase() {
         try {
-            // Force demo mode to prevent API errors
-            console.log('Using demo data due to API error');
-            this.isDemo = true;
-            
-            // Keep connection for future use but don't use it for now
-            if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY && 
-                window.SUPABASE_URL !== 'your-supabase-url' && 
-                window.SUPABASE_ANON_KEY !== 'your-supabase-anon-key') {
-                this.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+            const url = window.CONFIG.SUPABASE_URL;
+            const key = window.CONFIG.SUPABASE_ANON_KEY;
+
+            if (!url || !key) {
+                console.warn('❌ Supabase URL ou Key ausente');
+                this.isDemo = true;
+                return;
             }
+
+            this.supabase = supabase.createClient(url, key);
+            this.isDemo = false;
+            console.log('✅ Supabase client criado com sucesso');
         } catch (error) {
-            console.log('📊 Running in demo mode - Supabase configuration error');
+            console.error('📊 Erro ao inicializar Supabase. Rodando em modo demo:', error);
             this.isDemo = true;
         }
     }
 
-    // Appointments
     async getAppointments(barber = null) {
         if (this.isDemo) {
             return DemoData.getAppointments(barber);
         }
 
         try {
+            const { data, error } = await this.supabase
+                .from('agendamento_todos')
+                .select('*')
+                .order('data', { ascending: true });
+
+            if (error) throw error;
+
             if (barber && barber !== 'todos') {
-                const { data, error } = await this.supabase
-                    .from(`agendamentos_${barber}`)
-                    .select('*')
-                    .order('data', { ascending: true });
-                
-                if (error) throw error;
-                return data || [];
-            } else {
-                // Get all appointments
-                const [renneData, leleData] = await Promise.all([
-                    this.supabase.from('agendamentos_renne').select('*'),
-                    this.supabase.from('agendamentos_lele').select('*')
-                ]);
-                
-                return [...(renneData.data || []), ...(leleData.data || [])];
+                return data.filter(app => app.barbeiro === barber);
             }
+
+            return data || [];
         } catch (error) {
             console.log('Using demo data due to API error');
             return DemoData.getAppointments(barber);
@@ -62,11 +58,11 @@ class DataService {
 
         try {
             const { data, error } = await this.supabase
-                .from(`agendamentos_${barber}`)
-                .insert([appointment])
+                .from('agendamento_todos')
+                .insert([{ ...appointment, barbeiro: barber }])
                 .select()
                 .single();
-            
+
             if (error) throw error;
             return data;
         } catch (error) {
@@ -82,12 +78,12 @@ class DataService {
 
         try {
             const { data, error } = await this.supabase
-                .from(`agendamentos_${barber}`)
+                .from('agendamento_todos')
                 .update(updates)
                 .eq('id', id)
                 .select()
                 .single();
-            
+
             if (error) throw error;
             return data;
         } catch (error) {
@@ -103,10 +99,10 @@ class DataService {
 
         try {
             const { error } = await this.supabase
-                .from(`agendamentos_${barber}`)
+                .from('agendamento_todos')
                 .delete()
                 .eq('id', id);
-            
+
             if (error) throw error;
             return true;
         } catch (error) {
@@ -115,7 +111,6 @@ class DataService {
         }
     }
 
-    // Barbers
     async getBarbers() {
         if (this.isDemo) {
             return DemoData.getBarbers();
@@ -126,7 +121,7 @@ class DataService {
                 .from('barbeiros')
                 .select('*')
                 .order('nome', { ascending: true });
-            
+
             if (error) throw error;
             return data || [];
         } catch (error) {
@@ -135,7 +130,6 @@ class DataService {
         }
     }
 
-    // Notices
     async getNotices() {
         if (this.isDemo) {
             return DemoData.getNoticesHistory();
@@ -146,7 +140,7 @@ class DataService {
                 .from('avisos')
                 .select('*')
                 .order('created_at', { ascending: false });
-            
+
             if (error) throw error;
             return data || [];
         } catch (error) {
@@ -166,7 +160,7 @@ class DataService {
                 .select('*')
                 .eq('ativo', true)
                 .single();
-            
+
             if (error && error.code !== 'PGRST116') throw error;
             return data;
         } catch (error) {
@@ -174,11 +168,10 @@ class DataService {
         }
     }
 
-    // Status check
     isDemoMode() {
         return this.isDemo;
     }
 }
 
-// Create global instance
+// Criar instância global
 window.dataService = new DataService();
