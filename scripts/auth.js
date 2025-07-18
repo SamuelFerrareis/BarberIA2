@@ -4,7 +4,13 @@ class Auth {
     constructor() {
         this.supabase = window.supabase;
         this.currentUser = null;
+        
     }
+
+    getSupabaseClient() {
+    return this.supabase;
+    }
+
 
     init() {
         const url = window.CONFIG.SUPABASE_URL;

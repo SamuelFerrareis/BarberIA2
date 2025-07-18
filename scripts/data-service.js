@@ -3,7 +3,7 @@
 class DataService {
     constructor() {
         this.isDemo = false;
-        this.supabase = null;
+        this.supabase = window.supabase;
         this.initializeSupabase();
     }
 
@@ -20,6 +20,7 @@ class DataService {
 
             this.supabase = supabase.createClient(url, key);
             this.isDemo = false;
+            console.log('⚙️ DataService isDemo?', this.isDemo);
             console.log('✅ Supabase client criado com sucesso');
         } catch (error) {
             console.error('📊 Erro ao inicializar Supabase. Rodando em modo demo:', error);
@@ -167,6 +168,15 @@ class DataService {
             return DemoData.getCurrentNotice();
         }
     }
+
+   async updateBarber(id, updates) {
+    return await this.supabase
+      .from('barbeiros')
+      .update(updates)
+      .eq('id', id);
+  }
+
+
 
     isDemoMode() {
         return this.isDemo;

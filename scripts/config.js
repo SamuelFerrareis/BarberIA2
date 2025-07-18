@@ -4,7 +4,8 @@ window.CONFIG = {
     // Supabase configuration - these will be injected by the server
     SUPABASE_URL: 'https://ojbgkckqertayszeeysk.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYmdrY2txZXJ0YXlzemVleXNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1OTg3NTUsImV4cCI6MjA2NTE3NDc1NX0.U01u90qtqPKYQu87snwCsOZEmIFxiw6hRVLj61xRIpY',
-    
+
+
     // Application constants
     APP_NAME: 'Sistema de Gestão - Barbearia',
     VERSION: '1.0.0',
@@ -75,4 +76,5 @@ window.CONFIG = {
         hasSupabaseUrl: !!window.CONFIG.SUPABASE_URL,
         hasSupabaseKey: !!window.CONFIG.SUPABASE_ANON_KEY
     });
+    
 })();

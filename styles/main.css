@@ -1234,6 +1234,205 @@ body {
     font-weight: 500;
 }
 
+/* CARD DO BARBEIRO */
+.barber-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.barber-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-primary);
+}
+
+.barber-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.barber-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--secondary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barber-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.barber-info {
+  flex-grow: 1;
+}
+
+.barber-info h3 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.barber-info p {
+  font-size: 0.9rem;
+  margin: 2px 0;
+  color: var(--text-secondary);
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  background: var(--accent-primary);
+  text-transform: uppercase;
+}
+
+.status-ativo {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+}
+
+.status-inativo {
+  background-color: var(--error-bg);
+  color: var(--error-text);
+}
+
+.barber-details .detail-section {
+  margin-bottom: 12px;
+}
+
+.barber-details h4 {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+}
+
+.barber-details p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.days-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.day-indicator {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.day-indicator.available {
+  background: var(--success-bg);
+  color: var(--success-text);
+  border-color: var(--success-text);
+}
+
+.day-indicator.unavailable {
+  background: var(--input-bg);
+  opacity: 0.5;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: #1e1e2f;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.modal-content input, .modal-content button {
+  margin: 8px 0;
+  padding: 10px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+}
+
+
+
+.barber-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.secondary-btn {
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondary-btn:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.secondary-btn.danger {
+  background: var(--error-bg);
+  color: var(--error-text);
+  border-color: var(--error-text);
+}
+
+.secondary-btn.success {
+  background: var(--success-bg);
+  color: var(--success-text);
+  border-color: var(--success-text);
+}
+
+
+
 /* Mobile-First Responsive Design - seguindo boas práticas de UX/UI */
 
 /* Tablet adjustments */

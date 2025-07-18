@@ -359,6 +359,8 @@ class Main {
     }
 }
 
+
+
 // Create global instance
 window.Main = new Main();
 
